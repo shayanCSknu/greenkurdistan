@@ -8,6 +8,7 @@
   const staticPreview = location.protocol === 'file:' ||
     (['localhost','127.0.0.1'].includes(location.hostname) && location.port === '63342');
   function showHelp() {
+    if (!staticPreview) return;
     if (document.getElementById('server-help')) return;
     const box = document.createElement('aside');
     box.id = 'server-help'; box.className = 'section-shell server-help'; box.setAttribute('role','status');

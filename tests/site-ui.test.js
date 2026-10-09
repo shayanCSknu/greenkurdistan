@@ -5,6 +5,14 @@ const { resolve } = require('node:path');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const { fixture } = require('./report-helpers');
 const { WEATHER, AIR } = require('../server/climate');
+test('expanded city history uses shared coordinates and each city timezone across four countries',async t=>{
+  const cities=require('../js/vendor/kurdistan-cities');assert.equal(Object.keys(cities).length,44);
+  const app=await fixture(t,{climateOptions:{fetcher:sourceFixture}}),client=app.client();
+  for(const key of ['zakho','van','sanandaj','qamishli']){
+    const result=await client.request('/api/climate/history?dataset=weather&city='+key+'&start=2025-01-01&end=2025-01-02');assert.equal(result.status,200,key);
+    const url=new URL(result.data.source.url);assert.equal(Number(url.searchParams.get('latitude')),cities[key].lat);assert.equal(Number(url.searchParams.get('longitude')),cities[key].lon);assert.equal(url.searchParams.get('timezone'),cities[key].timezone);assert.equal(result.data.source.timezone,cities[key].timezone);
+  }
+});
 
 // Deterministic fixtures are used only in tests; production always fetches source records.
 async function sourceFixture(url) {
@@ -99,11 +107,12 @@ test('production climate page loads records, draws chart, paginates, switches da
   assert.equal(ui.$('#history-city-label').hidden,true);
 });
 
-test('climate UI explains static-preview failure and retries with source validation errors',async t=>{
+test('climate UI explains connection failure without local setup links and retries with source validation errors',async t=>{
   const app=await fixture(t,{climateOptions:{fetcher:sourceFixture}});
   const ui=await browser(t,app,'climate.html',{offline:true});
   await until(()=>ui.$('#history-message').textContent.includes('server is unavailable'),'offline message');
-  assert.ok(ui.$('#server-help a').href.endsWith('/climate.html'));
+  assert.equal(ui.$('#server-help'),null);
+  assert.doesNotMatch(ui.$('#history-message').textContent,/Start Website|localhost|npm/);
   assert.ok(ui.$('#history-results').hidden);
   ui.w.fetch=async()=>Response.json({error:'outside_coverage'},{status:400});
   ui.$('#history-form').dispatchEvent(new ui.w.Event('submit',{cancelable:true}));

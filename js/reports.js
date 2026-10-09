@@ -3,7 +3,7 @@
   const $ = selector => document.querySelector(selector);
   const groups = {
     categories: ['water','waste','green-space','pollution'],
-    areas: ['knowledge-university','erbil','ankawa','baharka','shaqlawa','other'],
+    areas: ['knowledge-university','ankawa','baharka',...Object.keys(window.KURDISTAN_CITIES||{erbil:0,shaqlawa:0}),'other'],
     statuses: ['submitted','reviewed','in_progress','resolved','rejected'],
     urgencies: ['normal','high']
   };
@@ -59,7 +59,7 @@
   }
   async function api(path, method = 'GET', payload) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 30000);
+    const timer = setTimeout(() => controller.abort(), path==='/api/reports'&&method==='POST'?120000:30000);
     try {
       const response = await fetch(path, { method, credentials:'same-origin', cache:'no-store', signal:controller.signal,
         headers: method === 'GET' ? {} : { 'Content-Type':'application/json', 'X-Green-Request':'1' },
@@ -168,11 +168,20 @@
     }
     const photos = el('div',null,'rr-photo-grid');
     for (const kind of report.photos) {
+      if(kind==='before'&&report.attachments?.length)continue;
       const figure = el('figure'); const image = el('img'); image.alt = t(kind); image.src = `/api/reports/${report.id}/photos/${kind}?v=${report.version}`;
       image.addEventListener('error',()=> { image.hidden = true; figure.append(el('p',t('photoUnavailable'),'rr-caption')); },{once:true});
       figure.append(image,el('figcaption',t(kind))); photos.append(figure);
     }
     container.append(photos);
+    const media=el('div',null,'rr-photo-grid');
+    for(const item of report.attachments||[]){
+      const figure=el('figure'),node=el(item.mime.startsWith('video/')?'video':'img');node.src=`/api/reports/${report.id}/attachments/${item.slot}`;
+      if(node.tagName==='VIDEO'){node.controls=true;node.preload='metadata';node.playsInline=true;}else {node.alt=window.I18N?.text('Problem attachment')||'Problem attachment';node.loading='lazy';}
+      node.addEventListener('error',()=>{figure.append(el('p',t('photoUnavailable'),'rr-caption'));},{once:true});
+      figure.append(node,el('figcaption',`${item.slot} / ${report.attachments.length}`));media.append(figure);
+    }
+    container.append(media);
     if (report.resolution) { container.append(el('h3',t('resolution')),el('p',report.resolution,'rr-resolution')); }
     container.append(el('h3',t('history')));
     const history = el('ol',null,'rr-history');
@@ -297,7 +306,8 @@
     } catch (error) { $('#connection-message').hidden = false; errorMessage('#connection-message',error); }
     finally { $('#sign-out').disabled = false; }
   });
-  $('#create-report').elements.photo.addEventListener('change',event=> {
+  window.ReportAttachments?.init(normalizePhoto);
+  if(!window.ReportAttachments)$('#create-report').elements.photo.addEventListener('change',event=> {
     beforePhoto = preparePhoto(event.target,'#create-message');
     if (beforeUrl) URL.revokeObjectURL(beforeUrl);
     const file = event.target.files[0]; const preview = $('#before-preview'); preview.hidden = true;
@@ -311,9 +321,10 @@
     if ((latitude === null) !== (longitude === null)) { message('#create-message','invalid_coordinates'); return; }
     button.disabled = true; message('#create-message','saving');
     try {
-      const image = await beforePhoto;
+      const image = window.ReportAttachments?null:await beforePhoto;
+      const attachments=window.ReportAttachments?await window.ReportAttachments.payload():undefined;
       if (!fields.photo.checkValidity()) { message('#create-message','invalid_photo'); return; }
-      const result = await api('/api/reports','POST',{requestId,title:fields.title.value,category:fields.category.value,area:fields.area.value,location:fields.location.value,description:fields.description.value,goal:fields.goal.value,resources:fields.resources.value,urgency:fields.urgency.value,latitude,longitude,photo:image});
+      const result = await api('/api/reports','POST',{requestId,title:fields.title.value,category:fields.category.value,area:fields.area.value,location:fields.location.value,description:fields.description.value,goal:fields.goal.value,resources:fields.resources.value,urgency:fields.urgency.value,latitude,longitude,photo:image,attachments});
       form.reset(); beforePhoto = Promise.resolve(null); requestId = newId(); $('#before-preview').hidden = true;
       if (beforeUrl) URL.revokeObjectURL(beforeUrl); beforeUrl = null;
       message('#create-message','reportSaved',{id:result.report.id}); scope = 'mine'; page = 1; $('#filters').reset(); updateAccount(); await refresh();

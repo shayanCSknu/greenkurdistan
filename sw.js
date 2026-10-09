@@ -1,5 +1,5 @@
-const CACHE_NAME = 'green-kurdistan-v8';
-const APP_SHELL = ['./', 'index.html', 'weather.html', 'climate.html', 'actions.html', 'toolkit.html', 'impact.html', 'reports.html', 'css/style.css', 'css/reports.css', 'css/languages.css', 'css/history.css', 'js/app.js', 'js/reports.js', 'js/community-ui.js', 'js/report-translations.js', 'js/climate-history.js', 'js/site-runtime.js', 'js/site-translations.js', 'js/site-i18n.js', 'js/map.js', 'js/report-map.js', 'js/vendor/leaflet/leaflet.js', 'js/vendor/leaflet/leaflet.css', 'js/vendor/region-data.js', 'site.webmanifest', 'img/kurdistan-flag.svg', 'img/kurdistan-landscape.svg', 'icon.svg'];
+const CACHE_NAME = 'green-kurdistan-v10';
+const APP_SHELL = ['./', 'index.html', 'weather.html', 'climate.html', 'actions.html', 'toolkit.html', 'impact.html', 'reports.html', 'css/style.css', 'css/reports.css', 'css/languages.css', 'css/history.css', 'js/app.js', 'js/reports.js', 'js/community-ui.js', 'js/report-translations.js', 'js/climate-history.js', 'js/site-runtime.js', 'js/site-translations.js', 'js/site-i18n.js', 'js/map.js', 'js/report-map.js', 'js/report-attachments.js', 'js/vendor/leaflet/leaflet.js', 'js/vendor/leaflet/leaflet.css', 'js/vendor/region-data.js', 'js/vendor/kurdistan-cities.js', 'site.webmanifest', 'img/kurdistan-flag.svg', 'img/kurdistan-landscape.svg', 'icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
 });

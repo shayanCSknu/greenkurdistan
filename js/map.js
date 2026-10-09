@@ -1,7 +1,7 @@
 ﻿(() => {
   const $=selector=>document.querySelector(selector),host=$('#kurdistan-map');if(!host)return;
   const tr=(text,values={})=>window.I18N?.text(text,values)||text.replace(/\{(\w+)\}/g,(_,key)=>values[key]??'');
-  const cities={
+  const cities=window.KURDISTAN_CITIES||{
     erbil:{name:'Erbil',lat:36.19,lon:44.01},sulaymaniyah:{name:'Sulaymaniyah',lat:35.56,lon:45.43},
     duhok:{name:'Duhok',lat:36.86,lon:42.99},halabja:{name:'Halabja',lat:35.18,lon:45.98},shaqlawa:{name:'Shaqlawa',lat:36.40,lon:44.32}
   };
@@ -53,7 +53,7 @@
       attribution:'<a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a> (public domain)'}).addTo(map);
     for(const [key,city]of Object.entries(cities)){
       const icon=L.divIcon({className:'map-city-marker',html:'&#9679;',iconSize:[24,24],iconAnchor:[12,12]});
-      markers[key]=L.marker([city.lat,city.lon],{icon,title:tr(city.name),keyboard:true}).addTo(map).bindTooltip(tr(city.name),{permanent:true,direction:key==='erbil'?'left':'right'}).on('click',()=>selectCity(key));
+      markers[key]=L.marker([city.lat,city.lon],{icon,title:tr(city.name),keyboard:true}).addTo(map).bindTooltip(tr(city.name),{direction:'top'}).on('click',()=>selectCity(key));
     }
     const fit=()=>map.fitBounds(Object.values(cities).map(city=>[city.lat,city.lon]),{padding:[55,55],maxZoom:8});
     $('#map-reset').addEventListener('click',fit);

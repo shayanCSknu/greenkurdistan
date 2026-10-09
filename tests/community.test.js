@@ -39,7 +39,7 @@ test('community lifecycle: photo report, moderation, team, volunteers, tasks, ev
   result=await owner.request(base+'/community');assert.equal(result.data.tasks[0].status,'done');
   assert.equal((await volunteer.request(base+'/team/membership','POST',{action:'join'})).status,409);
   assert.equal((await outsider.request(base+'/updates','POST',{kind:'discussion',content:'Thank you for cleaning the public garden.'})).status,200);
-  assert.equal(app.db.prepare('PRAGMA user_version').get().user_version,2);
+  assert.equal(app.db.prepare('PRAGMA user_version').get().user_version,3);
 });
 
 test('community permissions, support idempotency, task ownership, leadership transfer and leaving',async t=>{
@@ -107,7 +107,7 @@ test('version-one databases upgrade without losing accounts, sessions, reports o
       assert.equal(data.report.title,created.data.report.title);assert.equal(data.report.brief.urgency,'normal');
       assert.equal((await fetch(base+'/api/reports/'+id+'/photos/before',{headers:{Cookie:cookie}})).status,200);
       assert.equal(upgraded.db.prepare('SELECT COUNT(*) AS n FROM users').get().n,1);
-      assert.equal(upgraded.db.prepare('PRAGMA user_version').get().user_version,2);
+      assert.equal(upgraded.db.prepare('PRAGMA user_version').get().user_version,3);
     }finally{await new Promise(done=>upgraded.server.close(done));}
   }
 });

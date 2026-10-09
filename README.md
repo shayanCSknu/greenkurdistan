@@ -57,7 +57,7 @@ There are no default credentials or publicly accessible administrator-setup endp
 - Pagination, search, manual refresh and background refresh every 20 seconds while the page is visible. An open member report refreshes; administrator editing is preserved until saving.
 - English, Sorani Kurdish and Arabic across every page, including navigation and interactive tools. The header language selector sits beside the theme button and remembers your choice across pages. User-written reports stay in their original language.
 - A typed location works entirely offline on the local server. Optional device geolocation depends on browser permission and a secure context; an OpenStreetMap link requires internet.
-- JPEG, PNG and WebP attachments up to 3 MB. The browser decodes and resizes photos to a maximum edge of 1600 pixels, re-encodes them as JPEG and strips source metadata before upload. The server checks allowed media types, size and file signatures; it does not perform antivirus scanning or visual moderation.
+- Up to **three problem attachments total**, in any mix: JPEG/PNG/WebP photos up to 3 MB each, or MP4/WebM videos up to 15 MB each. Add files separately, preview them and remove them before submitting. Photos are resized to a maximum edge of 1600 pixels and re-encoded as JPEG to remove source metadata. Videos retain their original bytes and metadata. The server checks media types, sizes and container signatures; it does not perform antivirus scanning or visual moderation. Video playback supports byte-range requests and depends on the browser supporting the uploaded codec.
 - Keyboard-accessible forms, focus styles, native dialogs, status announcements and dark mode.
 
 Do not include faces, private addresses or personal contact details in reports. Moderators should review attached photos before making a report public. Discussion and progress photos on reviewed reports are public immediately and can be hidden by moderators. Team participation is voluntary; creating a team does not send invitations, notifications or dispatch university staff. Share the report link to invite people to join.
@@ -96,7 +96,7 @@ npm.cmd test
 
 `dist/` contains frontend files. **Static hosting alone is insufficient** for shared accounts, reports and photos: deploy the Node server with persistent storage as well. `npm start` serves the project frontend and API together.
 
-The 35-test suite exercises real HTTP requests, separate users, moderation, photos, teams, task ownership, resolution evidence, database restart/migration, authentication, access controls, filters, malformed input and offline behaviour. DOM-based frontend tests exercise registration, submission, team creation/joining, task completion, evidence review, administrator updates, language switching on all source and production pages, map selection and blocked-tile recovery. DOM tests do not replace visual browser testing or real device testing.
+The 39-test suite exercises real HTTP requests, separate users, moderation, photos/videos, teams, task ownership, resolution evidence, database restart/migration, authentication, access controls, filters, malformed input and offline behaviour. Media checks cover three-file limits, MIME/signature and size rejection, private access, video byte ranges, legacy-photo compatibility and schema-version-two upgrades. City history checks verify coordinates and timezones across four countries. DOM tests cover reporting, community tasks, language switching on all source and production pages, map selection and blocked-tile recovery. Real Chrome separately verifies three mixed-file uploads, attachment removal, draft retention after failure, retries and playable video previews/detail views. Physical phone and native camera testing remain unverified.
 
 ## Languages, map and Toolkit
 
@@ -108,9 +108,13 @@ When creating a report, click its exact problem location on the street map, drag
 
 The server security policy explicitly permits the street tile host. The regional fill is removed in street view so it cannot obscure streets. Real headless Chrome checks verified visible streets/buildings and the report pin submission/detail/directions workflow; screenshots are saved in `.cache/street-map.png` and `.cache/report-map.png`. Test reports used a separate in-memory database.
 
+The map, weather, climate history and report areas share **44 cities and towns** across Iraqi Kurdistan and nearby cities, and Kurdish regions of Turkey, Iran and Syria. Examples include Zakho, Soran, Akre, Kirkuk, Amadiyah, Diyarbakir, Van, Mardin, Sanandaj, Mahabad, Qamishli, Kobani and Afrin. Coordinates and city timezones were verified through [Open-Meteo's GeoNames geocoding API](https://open-meteo.com/en/docs/geocoding-api); the shared catalog is `js/vendor/kurdistan-cities.js`. This is a city catalog, not a claim to list every settlement or define political borders. Pan the map and choose an exact report pin anywhere, including locations outside the named city list.
+
 Leaflet 1.9.4 is bundled locally under its BSD-2-Clause license: `js/vendor/leaflet/LICENSE`. Regional country geometry comes from the public-domain [Natural Earth country dataset](https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson). Optional street tiles credit OpenStreetMap contributors.
 
 ## Deployment boundaries
+
+For the live domain repair and ready-to-use Docker configuration, see [DEPLOYMENT.md](DEPLOYMENT.md). GitHub Pages serves the frontend only; the same domain must also serve the Node API.
 
 Before offering this publicly, configure an HTTPS reverse proxy, set `COOKIE_SECURE=1`, arrange durable storage and backups, and appoint actual moderators. The server defaults to local-only access. Its in-memory rate limiter is intended for a single server process. Real repairs and staff participation require an agreement with the people responsible; software cannot guarantee a physical response.
 

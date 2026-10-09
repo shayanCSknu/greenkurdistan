@@ -25,7 +25,7 @@
       document.querySelector('#pin-center').addEventListener('click',()=>{const p=picker.getCenter();setPin([p.lat,p.lng],false);});
       document.querySelector('#pin-retry').addEventListener('click',()=>{layer.redraw();status('Click the problem location on the map, or drag its pin.');});
     }
-    picker.invalidateSize();const point=coordinates();if(point)setPin(point);else status('Click the problem location on the map, or drag its pin.');
+    picker.invalidateSize();const point=coordinates();if(point)setPin(point);else {const city=window.KURDISTAN_CITIES?.[form.elements.area.value];if(city)picker.setView([city.lat,city.lon],15);status('Click the problem location on the map, or drag its pin.');}
   }
   function show(container,report){
     detail?.remove();detail=null;
@@ -42,6 +42,7 @@
   for(const field of ['latitude','longitude'])form.elements[field].addEventListener('input',()=>{const point=coordinates();if(point)setPin(point);else if(marker){marker.remove();marker=null;status('Click the problem location on the map, or drag its pin.');}});
   document.querySelector('#pin-clear').addEventListener('click',()=>{form.elements.latitude.value='';form.elements.longitude.value='';marker?.remove();marker=null;status('Click the problem location on the map, or drag its pin.');});
   form.addEventListener('reset',()=>{marker?.remove();marker=null;status('Click the problem location on the map, or drag its pin.');});
+  form.elements.area.addEventListener('change',()=>{const city=window.KURDISTAN_CITIES?.[form.elements.area.value];if(picker&&city){picker.setView([city.lat,city.lon],15);status('Click the problem location on the map, or drag its pin.');}});
   window.addEventListener('site:language',()=>{status(statusKey);if(marker)marker.getElement()?.setAttribute('title',tr('Problem location'));});
   window.ReportMap={open,setPin,show,get picker(){return picker;},get marker(){return marker;},get detail(){return detail;}};
 })();

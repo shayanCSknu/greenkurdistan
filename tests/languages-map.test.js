@@ -52,16 +52,16 @@ test('saved site language is applied on a different tab including reporting and 
 
 test('bundled regional map draws geography, selects cities, handles blocked street tiles and remains usable offline',async t=>{
  const ui=await browser(t,'impact.html');assert.ok(ui.w.GreenMap.map);
- assert.equal(ui.w.document.querySelectorAll('.leaflet-marker-icon').length,5);assert.equal(ui.$('.leaflet-overlay-pane svg path'),null,'regional fill must not cover street tiles');
+ assert.equal(ui.w.document.querySelectorAll('.leaflet-marker-icon').length,44);assert.equal(ui.$('.leaflet-overlay-pane svg path'),null,'regional fill must not cover street tiles');
  assert.equal(ui.$('#map-view').value,'streets');assert.ok(ui.$('.leaflet-tile'),'street tiles load by default');assert.equal(ui.w.GreenMap.map.getZoom(),16);
  ui.$('.leaflet-marker-icon[title="Duhok"]').dispatchEvent(new ui.w.MouseEvent('click',{bubbles:true,view:ui.w}));
- await until(()=>ui.$('#map-temp').textContent.includes('36.86'),'Duhok live conditions');assert.equal(ui.$('#map-city-select').value,'duhok');assert.match(ui.$('#map-external').href,/42.99/);
+ await until(()=>ui.$('#map-temp').textContent.includes('36.86'),'Duhok live conditions');assert.equal(ui.$('#map-city-select').value,'duhok');assert.match(ui.$('#map-external').href,/42.9879/);
  ui.$('#map-view').value='streets';ui.$('#map-view').dispatchEvent(new ui.w.Event('change'));assert.ok(ui.$('.leaflet-tile'));
  assert.equal(ui.$('.leaflet-tile').referrerPolicy,'strict-origin-when-cross-origin');
- ui.$('.leaflet-tile').dispatchEvent(new ui.w.Event('error'));assert.equal(ui.$('#map-view').value,'overview');assert.match(ui.$('#map-message').textContent,/could not load/);assert.equal(ui.w.document.querySelectorAll('.leaflet-marker-icon').length,5);
+ ui.$('.leaflet-tile').dispatchEvent(new ui.w.Event('error'));assert.equal(ui.$('#map-view').value,'overview');assert.match(ui.$('#map-message').textContent,/could not load/);assert.equal(ui.w.document.querySelectorAll('.leaflet-marker-icon').length,44);
  ui.$('#map-city-select').value='halabja';ui.$('#map-city-select').dispatchEvent(new ui.w.Event('change'));
- await until(()=>ui.$('#map-temp').textContent.includes('35.18'),'Halabja after fallback');ui.$('#map-reset').click();assert.ok(ui.w.GreenMap.map.getZoom()<=8);
+ await until(()=>ui.$('#map-temp').textContent.includes('35.178'),'Halabja after fallback');ui.$('#map-reset').click();assert.ok(ui.w.GreenMap.map.getZoom()<=8);
  const offline=await browser(t,'impact.html',{offline:true});offline.$('.leaflet-tile').dispatchEvent(new offline.w.Event('error'));assert.ok(offline.$('.leaflet-overlay-pane svg path'));assert.equal(offline.$('#map-aqi-label').textContent,'Unavailable');
  offline.$('#map-city-select').value='shaqlawa';offline.$('#map-city-select').dispatchEvent(new offline.w.Event('change'));await until(()=>offline.$('#map-city').textContent==='Shaqlawa','offline city selection');
- assert.equal(offline.$('#map-temp').textContent,'--');assert.equal(offline.w.document.querySelectorAll('.leaflet-marker-icon').length,5);
+ assert.equal(offline.$('#map-temp').textContent,'--');assert.equal(offline.w.document.querySelectorAll('.leaflet-marker-icon').length,44);
 });

@@ -6,9 +6,10 @@ const { resolve, extname } = require('node:path');
 const { openStore } = require('./store');
 const { createClimateService } = require('./climate');
 const { communityRoutes } = require('./community');
+const { attachments,sendMedia } = require('./media');
 const derive = promisify(scrypt);
 const CATEGORIES = ['water', 'waste', 'green-space', 'pollution'];
-const AREAS = ['knowledge-university', 'erbil', 'ankawa', 'baharka', 'shaqlawa', 'other'];
+const AREAS = ['knowledge-university', 'ankawa', 'baharka', ...Object.keys(require('../js/vendor/kurdistan-cities')), 'other'];
 const STATUSES = ['submitted', 'reviewed', 'in_progress', 'resolved', 'rejected'];
 const PUBLIC = ['reviewed', 'in_progress', 'resolved'];
 const MAX_PHOTO = 3 * 1024 * 1024;
@@ -35,13 +36,13 @@ function photo(value) {
   if (!valid) fail(400, 'invalid_photo');
   return { mime: value.mime, bytes };
 }
-async function body(req) {
+async function body(req, maximum = MAX_BODY) {
   if (!req.headers['content-type']?.startsWith('application/json')) fail(415, 'json_required');
-  if (Number(req.headers['content-length']) > MAX_BODY) fail(413, 'too_large');
+  if (Number(req.headers['content-length']) > maximum) fail(413, 'too_large');
   const chunks = []; let length = 0;
   for await (const chunk of req) {
     length += chunk.length;
-    if (length > MAX_BODY) fail(413, 'too_large');
+    if (length > maximum) fail(413, 'too_large');
     chunks.push(chunk);
   }
   try {
@@ -94,6 +95,8 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
     const result = { ...report };
     delete result.user_id; delete result.request_id;
     result.photos = db.prepare('SELECT kind FROM photos WHERE report_id=?').all(report.id).map(p => p.kind);
+    result.attachments=db.prepare('SELECT slot,mime,length(bytes) AS size FROM report_media WHERE report_id=? ORDER BY slot').all(report.id);
+    if(!result.photos.includes('before')&&result.attachments.some(item=>item.mime.startsWith('image/')))result.photos.push('before');
     result.brief = db.prepare('SELECT goal,resources,urgency FROM project_briefs WHERE report_id=?').get(report.id) || { goal:'', resources:'', urgency:'normal' };
     result.community = db.prepare(`SELECT
       (SELECT COUNT(*) FROM team_members WHERE report_id=?) AS members,
@@ -116,7 +119,7 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
     res.setHeader('Referrer-Policy', 'same-origin');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; media-src 'self' blob:; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
     try {
       const url = new URL(req.url, 'http://localhost');
       const path = url.pathname;
@@ -132,7 +135,7 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
             if (origin.host !== req.headers.host || !['http:','https:'].includes(origin.protocol)) fail(403, 'invalid_origin');
           }
         }
-        if (path === '/api/health' && method === 'GET') return json(res, 200, { ok: true, app: 'green-kurdistan', features: ['community-projects','climate-history'] });
+        if (path === '/api/health' && method === 'GET') return json(res, 200, { ok: true, app: 'green-kurdistan', features: ['community-projects','climate-history','report-media','regional-cities'],schemaVersion:db.prepare('PRAGMA user_version').get().user_version,cityCount:Object.keys(require('../js/vendor/kurdistan-cities')).length });
         if (await communityRoutes({ req,res,path,method,url,db,userFor,authenticated,getReport,field,photo,body,json,fail,transaction,rate,now })) return;
         if (path === '/api/climate/history' && method === 'GET') {
           rate(req,'climate',120);
@@ -200,7 +203,7 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
         }
         if (path === '/api/reports' && method === 'POST') {
           const user = authenticated(req); rate(req, 'report', 40);
-          const data = await body(req);
+          const data = await body(req,64*1024*1024);
           const requestId = field(data.requestId, 16, 80);
           if (!/^[a-zA-Z0-9-]+$/.test(requestId)) fail(400,'invalid_input');
           const existing = db.prepare('SELECT * FROM reports WHERE user_id=? AND request_id=?').get(user.id, requestId);
@@ -212,12 +215,15 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
           const latitude = data.latitude ?? null, longitude = data.longitude ?? null;
           if ((latitude === null) !== (longitude === null) || latitude !== null && (typeof latitude !== 'number' || typeof longitude !== 'number' || !Number.isFinite(latitude) || !Number.isFinite(longitude) || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)) fail(400,'invalid_coordinates');
           const before = photo(data.photo);
+          const media=attachments(data.attachments,photo,fail);
+          if(before&&media.length)fail(400,'invalid_attachments');
           const id = transaction(() => {
             const timestamp = now();
             const result = db.prepare('INSERT INTO reports(user_id,request_id,title,category,area,location,description,latitude,longitude,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)').run(user.id,requestId,title,data.category,data.area,location,description,latitude,longitude,timestamp,timestamp);
             const reportId = Number(result.lastInsertRowid);
             db.prepare('INSERT INTO project_briefs(report_id,goal,resources,urgency) VALUES (?,?,?,?)').run(reportId,goal,resources,urgency);
             if (before) db.prepare('INSERT INTO photos VALUES (?,?,?,?)').run(reportId,'before',before.mime,before.bytes);
+            media.forEach((item,i)=>db.prepare('INSERT INTO report_media VALUES (?,?,?,?)').run(reportId,i+1,item.mime,item.bytes));
             db.prepare('INSERT INTO history(report_id,actor_id,status,note,team,created_at) VALUES (?,?,?,?,?,?)').run(reportId,user.id,'submitted','','',timestamp);
             return reportId;
           });
@@ -246,10 +252,16 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
           });
           return json(res,200,{ report: serialize(getReport(report.id,user)) });
         }
+        const attachment=path.match(/^\/api\/reports\/([1-9][0-9]{0,9})\/attachments\/([1-3])$/);
+        if(attachment&&method==='GET'){
+          const report=getReport(Number(attachment[1]),userFor(req));
+          const data=db.prepare('SELECT mime,bytes FROM report_media WHERE report_id=? AND slot=?').get(report.id,Number(attachment[2]));
+          if(!data)fail(404,'not_found');return sendMedia(req,res,data,fail);
+        }
         const image = path.match(/^\/api\/reports\/([1-9][0-9]{0,9})\/photos\/(before|after)$/);
         if (image && method === 'GET') {
           const report = getReport(Number(image[1]),userFor(req));
-          const data = db.prepare('SELECT mime,bytes FROM photos WHERE report_id=? AND kind=?').get(report.id,image[2]);
+          const data = db.prepare('SELECT mime,bytes FROM photos WHERE report_id=? AND kind=?').get(report.id,image[2]) || (image[2]==='before'?db.prepare("SELECT mime,bytes FROM report_media WHERE report_id=? AND mime LIKE 'image/%' ORDER BY slot LIMIT 1").get(report.id):null);
           if (!data) fail(404,'not_found');
           res.writeHead(200, { 'Content-Type': data.mime, 'Content-Length': data.bytes.length, 'Cache-Control':'no-store', 'Content-Disposition':'inline' });
           return res.end(Buffer.from(data.bytes));
@@ -273,7 +285,7 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
       json(res, error.status || 500, { error: error.code && error instanceof HttpError ? error.code : 'server_error' });
     }
   });
-  server.requestTimeout = 30_000;
+  server.requestTimeout = 120_000;
   server.headersTimeout = 15_000;
   server.on('close', () => { clearInterval(cleanup); db.close(); });
   return { server, db };

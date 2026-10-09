@@ -2,6 +2,10 @@
 
 ## COMPLETED
 
+- Up to three mixed photo/video problem attachments with previews, removal, saved evidence and browser video players. Photos: 3 MB each; MP4/WebM videos: 15 MB each.
+- Shared 44-city/town catalog across map, weather, climate history and reporting, with sourced coordinates and city-specific history timezones.
+- Schema version 3 adds media storage while preserving legacy reports, photos, accounts and community records.
+
 - Live street/building map is the default; fixed security-policy access and regional-layer occlusion.
 - Reports can select/drag an exact problem pin, use map-center or device location, and store typed/picked coordinates. Teams see the saved close-up pin and directions.
 
@@ -26,7 +30,7 @@
 
 Real headless Chrome verification loaded live street tiles and inspected city streets/building outlines plus a saved report pin and directions link. Browser runtime errors: none. Screenshots: `.cache/street-map.png`, `.cache/report-map.png`. Browser test data used an isolated in-memory database.
 
-35 automated tests pass (8 application tests, 13 reporting tests, 5 site/climate regression tests, 6 community tests and 3 site-language/map tests):
+39 automated tests pass (8 application tests, 13 reporting tests, 6 site/climate regression tests, 6 community tests, 3 site-language/map tests and 3 attachment tests):
 
 - Full lifecycle through real HTTP requests from independent sessions.
 - Problem and resolution image storage/retrieval, private-photo access control and byte integrity.
@@ -51,6 +55,11 @@ Real headless Chrome verification loaded live street tiles and inspected city st
 - Idempotent support, membership/leadership permissions, release of unfinished tasks on leaving, moderation/photo privacy and update pagination.
 - Persistent teams/tasks/updates after restart and repeated migration from an existing version-one database.
 - Production community frontend, share links, plain-text rendering, draft retention, failed-request retry and loading recovery.
+- Three mixed attachments, idempotent submission, public/private moderation access, byte integrity, partial/suffix video ranges and invalid-range rejection.
+- Excess files, incompatible legacy/photo inputs, unsupported or mismatched formats, oversize videos and report-body size limits are rejected without partial records.
+- Schema-version-two media upgrade preserves legacy photos; new attachments survive restart.
+- Real Chrome production UI: recorded playable WebM plus two photos, fourth-file rejection, remove/re-add, language switching, failed upload retention, successful retry, video preview and report playback. Test data remained in an isolated database.
+- Four-country historical city requests use the catalog's latitude, longitude and timezone.
 
 On 2026-10-09, the local server was started and real climate API responses were checked: 126 annual HadCRUT5 records from 1900 through 2025, seven requested local weather days and 168 requested hourly air-quality records. Startup now supports the double-click Windows launcher and displays a complete-site link from static previews.
 

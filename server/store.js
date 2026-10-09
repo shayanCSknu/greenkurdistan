@@ -32,6 +32,11 @@ function openStore(filename = process.env.DATA_FILE || resolve(__dirname, '../da
       kind TEXT NOT NULL CHECK(kind IN ('before','after')), mime TEXT NOT NULL, bytes BLOB NOT NULL,
       PRIMARY KEY(report_id, kind)
     );
+    CREATE TABLE IF NOT EXISTS report_media (
+      report_id INTEGER NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
+      slot INTEGER NOT NULL CHECK(slot BETWEEN 1 AND 3), mime TEXT NOT NULL, bytes BLOB NOT NULL,
+      PRIMARY KEY(report_id,slot)
+    );
     CREATE TABLE IF NOT EXISTS history (
       id INTEGER PRIMARY KEY, report_id INTEGER NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
       actor_id INTEGER NOT NULL REFERENCES users(id), status TEXT NOT NULL,
@@ -75,7 +80,7 @@ function openStore(filename = process.env.DATA_FILE || resolve(__dirname, '../da
     CREATE INDEX IF NOT EXISTS members_user ON team_members(user_id,report_id);
     CREATE INDEX IF NOT EXISTS tasks_report ON project_tasks(report_id,id);
     CREATE INDEX IF NOT EXISTS updates_report ON community_updates(report_id,id);
-    PRAGMA user_version = 2;
+    PRAGMA user_version = 3;
   `);
   return db;
 }

@@ -34,7 +34,7 @@ if (themeToggle) {
   });
 }
 
-const locations = {
+const locations = window.KURDISTAN_CITIES || {
   erbil: { name: 'Hewlêr · Erbil', lat: 36.19, lon: 44.01 },
   sulaymaniyah: { name: 'Silêmanî · Sulaymaniyah', lat: 35.56, lon: 45.43 },
   duhok: { name: 'Dihok · Duhok', lat: 36.86, lon: 42.99 },

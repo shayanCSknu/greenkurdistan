@@ -1,5 +1,16 @@
 # Site redesign
 
+## Three-file evidence and regional cities (2026-10-09)
+
+- [x] Add three mixed image/video attachments, previews, removal, retry retention and persistent schema-version-three storage.
+- [x] Enforce photo/video formats, file counts, size limits and private-report access; support video byte ranges.
+- [x] Preserve legacy photos and verify migration from schema version 2 plus restart persistence.
+- [x] Share 44 sourced cities/towns across maps, weather, historical data and report areas; use city-specific timezones for history.
+- [x] Verify actual production Chrome uploads, local video previews/playback, removal, failed-upload recovery, translations and expanded city selection.
+- [x] Back up the live database before upgrade and restart the running local service; health reports schema version 3 and 44 cities.
+- [x] Production build and 39-test regression suite.
+- [ ] Native phone camera/video capture and physical-device checks remain environment-dependent.
+
 ## Detailed street maps and exact report locations (2026-10-09)
 
 - [x] Fix tile-host security policy and remove the opaque regional layer from street view; default to live streets/building outlines at city zoom.
@@ -64,6 +75,13 @@
 - [ ] Visual browser verification: the current browser inventory contains no browser or native app surfaces.
 
 ## Environment-dependent verification
+
+## Public-domain backend repair (2026-10-09)
+
+- COMPLETED: Confirmed the live domain's API health route returns 404 with GitHub Pages headers. Restricted local startup banner to file/IDE previews; replaced public reporting/climate errors in all three languages; updated service-worker cache version.
+- COMPLETED: Added Dockerfile, Compose persistent volumes, container health check and DEPLOYMENT.md for same-domain HTTPS Node hosting.
+- TESTED: Production build succeeds; all 40 automated tests pass, including public/local startup-banner behavior and offline retry handling.
+- ENVIRONMENT-DEPENDENT: Live Node deployment and domain routing await hosting details. Docker runtime is unavailable here; container execution is unverified. Nothing was committed or pushed.
 
 - Visual browser inspection remains unavailable: browser inventory returned no browsers and opening the in-app browser returned `Browser is not available: iab`.
 - Responsive breakpoints and keyboard focus styles are implemented but were not visually verified in a browser.

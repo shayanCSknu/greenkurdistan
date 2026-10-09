@@ -36,6 +36,7 @@ module.exports = merge(common, {
         { from: 'js/site-i18n.js', to: 'js/site-i18n.js' },
         { from: 'js/map.js', to: 'js/map.js' },
         { from: 'js/report-map.js', to: 'js/report-map.js' },
+        { from: 'js/report-attachments.js', to: 'js/report-attachments.js' },
         { from: 'sw.js', to: 'sw.js' },
       ],
     }),

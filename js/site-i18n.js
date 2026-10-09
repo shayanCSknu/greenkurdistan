@@ -35,10 +35,10 @@
     document.querySelectorAll('[data-t]').forEach(node=>{const source=window.RR_TEXT?.[node.dataset.t]?.[0];if(source){const next=text(source);if(node.textContent!==next)node.textContent=next;}});
     const walker=document.createTreeWalker(document.documentElement,NodeFilter.SHOW_TEXT);
     while(walker.nextNode())translateTextNode(walker.currentNode);
-    document.querySelectorAll('[placeholder],[aria-label],[alt]').forEach(node=>{
+    document.querySelectorAll('[placeholder],[aria-label],[alt],optgroup[label]').forEach(node=>{
       if(node.closest('[data-site-skip],#report-detail,#report-list')||node.hasAttribute('data-t-aria')||node.hasAttribute('data-t-alt'))return;
       let state=attributeState.get(node)||{};
-      for(const name of ['placeholder','aria-label','alt']){if(!node.hasAttribute(name))continue;const current=node.getAttribute(name);if(!state[name]||current!==state[name].last)state[name]={source:current};const translated=text(state[name].source);state[name].last=translated;if(current!==translated)node.setAttribute(name,translated);}
+      for(const name of ['placeholder','aria-label','alt','label']){if(!node.hasAttribute(name))continue;const current=node.getAttribute(name);if(!state[name]||current!==state[name].last)state[name]={source:current};const translated=text(state[name].source);state[name].last=translated;if(current!==translated)node.setAttribute(name,translated);}
       attributeState.set(node,state);
     });
   }

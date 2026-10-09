@@ -1,10 +1,8 @@
 const { createHash } = require('node:crypto');
 const { mkdir, readFile, writeFile, rename } = require('node:fs/promises');
 const { join, resolve } = require('node:path');
-const CITIES = {
-  erbil: { latitude:36.19,longitude:44.01 }, sulaymaniyah:{latitude:35.56,longitude:45.43},
-  duhok:{latitude:36.86,longitude:42.99},halabja:{latitude:35.18,longitude:45.98},shaqlawa:{latitude:36.40,longitude:44.32}
-};
+const CITY_DATA=require('../js/vendor/kurdistan-cities');
+const CITIES=Object.fromEntries(Object.entries(CITY_DATA).map(([key,city])=>[key,{latitude:city.lat,longitude:city.lon}]));
 const HADCRUT = 'https://www.metoffice.gov.uk/hadobs/hadcrut5/data/HadCRUT.5.2.0.0/analysis/diagnostics/HadCRUT.5.2.0.0.analysis.summary_series.global.';
 const SOURCES = {
   global: { name:'HadCRUT5 5.2.0.0 — Met Office Hadley Centre / Climatic Research Unit', documentation:'https://www.metoffice.gov.uk/hadobs/hadcrut5/', license:'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/', baseline:'1961–1990', earliest:'1850-01-01', kind:'global_analysis', resolution:'global', timezone:'UTC' },
@@ -97,12 +95,13 @@ function createClimateService({ fetcher=fetch, cacheDir=resolve(__dirname,'../.c
     const maxDays=dataset==='weather'?3660:366;
     if((Date.parse(end)-Date.parse(start))/86400000+1>maxDays)fail(400,'range_too_large');
     const coordinates=CITIES[city];
-    const query=new URLSearchParams({...coordinates,start_date:start,end_date:end,timezone:'Asia/Baghdad'});
+    const timezone=CITY_DATA[city].timezone;
+    const query=new URLSearchParams({...coordinates,start_date:start,end_date:end,timezone});
     let url;
     if(dataset==='weather'){query.set('models','era5');query.set('daily',WEATHER.join(','));url='https://archive-api.open-meteo.com/v1/archive?'+query;}
     else {query.set('domains','cams_global');query.set('hourly',AIR.join(','));url='https://air-quality-api.open-meteo.com/v1/air-quality?'+query;}
     const result=await source(url,'json',6*3600000), parsed=parseMeteo(result.data,dataset);
-    return {dataset,interval:dataset==='weather'?'daily':'hourly',city,source:{...sourceInfo,url},fetchedAt:result.fetchedAt,stale:result.stale,...parsed,requested:{start,end,...coordinates},availableThrough:parsed.rows.at(-1)?.time||null};
+    return {dataset,interval:dataset==='weather'?'daily':'hourly',city,source:{...sourceInfo,timezone,url},fetchedAt:result.fetchedAt,stale:result.stale,...parsed,requested:{start,end,...coordinates},availableThrough:parsed.rows.at(-1)?.time||null};
   }
   return {history};
 }

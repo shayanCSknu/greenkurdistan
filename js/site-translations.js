@@ -1,4 +1,12 @@
 window.SITE_TEXT = {
+  'Problem attachment':['فایلی کێشەکە','مرفق المشكلة'],
+  'Remove attachment':['فایل بسڕەوە','احذف المرفق'],
+  'Use up to three photos (3 MB each) or MP4/WebM videos (15 MB each).':['تا سێ وێنە (٣ MB) یان ڤیدیۆی MP4/WebM (١٥ MB) زیاد بکە.','استخدم حتى ثلاث صور (3 MB لكل صورة) أو فيديوهات MP4/WebM (15 MB لكل فيديو).'],
+  'You can attach up to three files in total.':['دەتوانیت تا سێ فایل زیاد بکەیت.','يمكنك إرفاق ثلاثة ملفات إجمالاً.'],
+  'Iraqi Kurdistan and nearby cities':['کوردستانی عێراق و شارە نزیکەکان','كردستان العراق والمدن القريبة'],
+  'Turkey':['تورکیا','تركيا'], 'Iran':['ئێران','إيران'], 'Syria':['سووریا','سوريا'],
+  'Cities across Kurdistan':['شارەکانی کوردستان','مدن كردستان'],
+  'Choose Global history for worldwide temperature change, or Local history for cities across Kurdistan.':['مێژووی جیهانی بۆ گۆڕانی پلەی گەرمیی جیهان، یان مێژووی ناوخۆ بۆ شارەکانی کوردستان هەڵبژێرە.','اختر التاريخ العالمي لتغير الحرارة عالمياً أو التاريخ المحلي لمدن كردستان.'],
   'Choose exact problem location':['شوێنی وردی کێشەکە هەڵبژێرە','اختر الموقع الدقيق للمشكلة'],
   'Exact problem location':['شوێنی وردی کێشەکە','الموقع الدقيق للمشكلة'],
   'Problem location':['شوێنی کێشەکە','موقع المشكلة'],
@@ -131,7 +139,7 @@ Object.assign(window.SITE_TEXT, {
   'This date range is outside the source coverage. Check the dates above.':['ئەم ماوەیە لە دەرەوەی داتای سەرچاوەیە. بەروارەکان بپشکنە.','الفترة خارج تغطية المصدر. تحقق من التواريخ.'],
   'Choose a shorter range: up to 10 years for weather or one year for air quality.':['ماوەیەکی کورتتر هەڵبژێرە: تا ١٠ ساڵ بۆ کەشوهەوا یان یەک ساڵ بۆ کوالێتی هەوا.','اختر فترة أقصر: حتى 10 سنوات للطقس أو سنة لجودة الهواء.'], 'Enter a valid start and end date.':['بەرواری دەستپێک و کۆتاییی دروست بنووسە.','أدخل تاريخ بداية ونهاية صالحين.'],
   'The source is unavailable. No replacement data has been generated. Please try again.':['سەرچاوە بەردەست نییە. هیچ داتای جێگرەوە دروست نەکراوە. هەوڵ بدەرەوە.','المصدر غير متاح. لم تُولّد بيانات بديلة. حاول مجدداً.'],
-  'The website server is unavailable. Start the complete website using Start Website.cmd and try again.':['سێرڤەر بەردەست نییە. بە Start Website.cmd ماڵپەڕ دەست پێ بکە و هەوڵ بدەرەوە.','خادم الموقع غير متاح. شغّل Start Website.cmd ثم حاول مجدداً.'],
+  'The website server is unavailable. Please try again later.':['سێرڤەر بەردەست نییە. تکایە دواتر هەوڵ بدەرەوە.','خادم الموقع غير متاح. يرجى المحاولة لاحقاً.'],
   'Enter all four emission factors and their source to calculate your result.':['هەر چوار فاکتەری دەردانی گاز و سەرچاوەکەیان بنووسە.','أدخل عوامل الانبعاث الأربعة ومصدرها لحساب النتيجة.'], 'Calculated using your emission factors.':['بە فاکتەرەکانت حیساب کرا.','حُسبت باستخدام عوامل الانبعاث التي أدخلتها.'],
   'Enter your measured flow and minutes saved per shower to calculate savings.':['ڕێژەی ئاوی پێوانەکراو و خولەکی پاشەکەوتکراو بنووسە.','أدخل التدفق المقاس والدقائق الموفرة لكل استحمام لحساب التوفير.'], 'Estimated from your measured flow and time savings.':['لە ڕێژەی ئاو و کاتی پاشەکەوتکراوت خەمڵێنرا.','تقدير مبني على التدفق المقاس والوقت الموفر.'],
   'Map view':['پیشاندانی نەخشە','عرض الخريطة'], 'Regional overview':['نەخشەی گشتیی ناوچە','نظرة إقليمية'], 'Street map (online)':['نەخشەی شەقام (ئینتەرنێت)','خريطة الشوارع (متصلة)'], 'Show all cities':['هەموو شارەکان پیشان بدە','اعرض جميع المدن'],
@@ -144,3 +152,5 @@ Object.assign(window.SITE_TEXT, {
   'Climate history and Report & Resolve need the website server. Double-click Start Website.cmd in the project folder, or run npm.cmd start, then open the complete website.':['مێژووی ئاووهەوا و ڕاپۆرت پێویستیان بە سێرڤەر هەیە. Start Website.cmd جێبەجێ بکە یان npm.cmd start بەکار بهێنە.','يحتاج تاريخ المناخ والبلاغات إلى خادم الموقع. افتح Start Website.cmd أو شغّل npm.cmd start ثم افتح الموقع الكامل.'],
   'Open complete website →':['ماڵپەڕی تەواو بکەرەوە ←','افتح الموقع الكامل ←']
 });
+
+for(const city of Object.values(window.KURDISTAN_CITIES||{})) window.SITE_TEXT[city.name]=[city.ku,city.ar];

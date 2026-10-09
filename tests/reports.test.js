@@ -84,7 +84,8 @@ test('validation, origin checks, private files and role escalation attempts are 
   for (const path of ['/data/reports.sqlite','/server/index.js','/package.json','/.git/config','/api/reports?page=-1','/api/reports?status=madeup']) assert.ok((await client.request(path)).status>=400,path);
   const raw=await fetch(app.base+'/api/reports',{method:'POST',headers:{'X-Green-Request':'1','Content-Type':'text/plain',Cookie:client.cookie},body:'{}'}); assert.equal(raw.status,415);
   const malformed=await fetch(app.base+'/api/reports',{method:'POST',headers:{'X-Green-Request':'1','Content-Type':'application/json',Cookie:client.cookie},body:'{broken'}); assert.equal(malformed.status,400);
-  assert.equal((await client.request('/api/reports','POST',report({description:'x'.repeat(6*1024*1024)}))).status,413);
+  assert.equal((await client.request('/api/reports','POST',report({description:'x'.repeat(6*1024*1024)}))).status,400,'text limit still applies despite larger media request allowance');
+  assert.equal((await client.request('/api/register','POST',{username:'x'.repeat(6*1024*1024)})).status,413,'account requests retain their smaller body limit');
   assert.equal(app.db.prepare('SELECT COUNT(*) AS n FROM reports').get().n,0);
 });
 
