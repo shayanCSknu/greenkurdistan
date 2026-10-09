@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Report &amp; Resolve | Green Kurdistan</title>
+  <meta name="theme-color" content="#183e30">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/reports.css">
+  
+  
+  
+  
+<link rel="stylesheet" href="css/languages.css"><link rel="stylesheet" href="js/vendor/leaflet/leaflet.css"><script src="js/report-translations.js" defer></script><script src="js/site-translations.js" defer></script><script src="js/site-i18n.js" defer></script><script src="js/site-runtime.js" defer></script><script src="js/app.js" defer></script><script src="js/vendor/leaflet/leaflet.js" defer></script><script src="js/report-map.js" defer></script><script src="js/community-ui.js" defer></script><script src="js/reports.js" defer></script></head>
+<body>
+  <a class="skip-link" href="#main-content" data-t="skip">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><img class="brand-logo" src="img/kurdistan-flag.svg" width="48" height="32" alt="Kurdistan flag" data-t-alt="flag"><span><strong>Green</strong> Kurdistan <small>ژینگەی کوردستان</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation" data-t-aria="mainNavigation"><a href="index.html" data-t="home">Home</a><a href="weather.html" data-t="weather">Weather</a><a href="climate.html" data-t="climate">Climate</a><a href="actions.html" data-t="actions">Take action</a><a href="toolkit.html" data-t="toolkit">Toolkit</a><a href="impact.html" data-t="impact">Impact Lab</a><a class="active" aria-current="page" href="reports.html" data-t="reportResolve">Report &amp; Resolve</a></nav>
+    <label class="site-language"><span data-t="language">Language</span><select id="language" aria-label="Language" data-site-skip><option value="en">English</option><option value="ku">کوردی</option><option value="ar">العربية</option></select></label><button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle dark mode" data-t-aria="themeToggle">☾</button>
+  </header>
+  <main id="main-content"><noscript><p class="section-shell">Enable JavaScript and open this page through Start Website.cmd to use the interactive features.</p></noscript>
+    <section class="section-shell page-heading rr-heading">
+      <div><p class="eyebrow" data-t="pilot">Student-led pilot · Erbil, Kurdistan</p><h1 data-t="headline">Notice it. Report it. Resolve it.</h1><p data-t="intro">Help protect our campus and neighbourhoods. Report environmental problems and follow their progress.</p></div>
+      
+    </section>
+    <section class="section-shell rr-workspace">
+      <p class="rr-notice" data-t="pilotNotice">An independent student project, not an official university or emergency service. Action on reports depends on participating coordinators.</p>
+      <div id="connection-message" class="rr-notice rr-error" role="status" hidden></div>
+      <div class="rr-toolbar"><p id="account-label" aria-live="polite"></p><div class="rr-toolbar-actions"><button id="account-open" class="outline-button" data-t="signIn">Sign in</button><button id="sign-out" class="outline-button" data-t="signOut" hidden>Sign out</button><button id="new-report" class="button" data-t="newReport">Report a problem</button></div></div>
+      <div class="rr-journey"><article class="glass-card"><span>01</span><h3 data-t="stepReport">Show the problem</h3><p data-t="stepReportHint">Upload a photo, describe the impact and explain what would help.</p></article><article class="glass-card"><span>02</span><h3 data-t="stepTeam">Bring people together</h3><p data-t="stepTeamHint">Form a team, offer your skills and volunteer for a task.</p></article><article class="glass-card"><span>03</span><h3 data-t="stepResolve">Make progress visible</h3><p data-t="stepResolveHint">Share updates and photos, then request a resolution review.</p></article></div><div class="rr-stats" id="stats" aria-live="polite"></div>
+      <p class="rr-caption" data-t="statsHint">Live counts from reviewed reports in this system. Submitted and rejected reports are private. These are not city-wide environmental measurements.</p>
+      <details class="rr-breakdown"><summary data-t="breakdown">Explore reports by area and category</summary><div id="breakdown" class="rr-breakdown-grid"></div></details>
+      <section id="create-panel" class="glass-card rr-panel" hidden>
+        <div class="rr-panel-heading"><h2 data-t="newReport">Report a problem</h2><button type="button" id="close-create" class="outline-button" data-t="close">Close</button></div>
+        <p class="rr-caption" data-t="privacy">Use a public landmark. Do not include phone numbers, faces, private addresses, or other personal information. Approved reports and photos are public.</p>
+        <form id="create-report">
+          <div class="rr-form-grid">
+            <label class="rr-full"><span data-t="title">Short title</span><input name="title" required minlength="5" maxlength="120" autocomplete="off"></label>
+            <label><span data-t="category">Category</span><select name="category" data-options="categories"></select></label>
+            <label><span data-t="area">Area</span><select name="area" data-options="areas"></select></label>
+            <label class="rr-full"><span data-t="location">Location or public landmark</span><input name="location" required minlength="3" maxlength="180" autocomplete="off"></label>
+            <label class="rr-full"><span data-t="description">Describe the problem</span><textarea name="description" required minlength="15" maxlength="10000" rows="7"></textarea></label>
+            <label class="rr-full"><span data-t="projectGoal">What would a successful solution look like?</span><textarea name="goal" maxlength="2000" rows="3"></textarea></label><label class="rr-full"><span data-t="resourcesNeeded">Help, skills or materials needed</span><textarea name="resources" maxlength="1500" rows="3"></textarea></label><label><span data-t="urgency">Community priority</span><select name="urgency" data-options="urgencies"></select></label><p class="rr-caption" data-t="detailedReportHint">Explain what happened, who or what is affected, how long it has been happening and what you have already tried. Up to 10,000 characters.</p><fieldset class="rr-full"><legend data-t="coordinates">Optional map coordinates</legend><p class="rr-caption" data-t="coordinateHint">Typed locations work without maps. Only share coordinates for the public problem location.</p><div id="report-location-map" class="report-location-map" aria-label="Choose exact problem location"></div><p id="pin-status" class="rr-caption" role="status">Click the problem location on the map, or drag its pin.</p><div class="map-toolbar"><button id="pin-center" type="button" class="outline-button">Place pin at map center</button><button id="pin-clear" type="button" class="outline-button">Clear pin</button><button id="pin-retry" type="button" class="outline-button">Retry map</button></div><div class="rr-form-grid"><label><span data-t="latitude">Latitude</span><input name="latitude" type="number" min="-90" max="90" step="any" inputmode="decimal"></label><label><span data-t="longitude">Longitude</span><input name="longitude" type="number" min="-180" max="180" step="any" inputmode="decimal"></label></div><button id="locate" type="button" class="outline-button" data-t="useLocation">Use my current location</button><span id="location-message" role="status"></span></fieldset>
+            <label class="rr-full"><span data-t="beforePhoto">Problem photo (optional)</span><input name="photo" type="file" accept="image/jpeg,image/png,image/webp" capture="environment"><small data-t="photoHint">JPEG, PNG or WebP, up to 3 MB. Photos are resized and metadata is removed before upload.</small></label>
+          </div>
+          <img id="before-preview" class="rr-preview" alt="" hidden>
+          <p class="rr-caption" data-t="draftHint">Text stays in this form if the connection fails. Keep this page open until submission succeeds.</p>
+          <div class="rr-form-actions"><button class="button" type="submit" data-t="submit">Submit for review</button><p id="create-message" role="status"></p></div>
+        </form>
+      </section>
+      <section aria-labelledby="browse-heading">
+        <div class="rr-panel-heading"><h2 id="browse-heading" data-t="browse">Community reports</h2><button id="refresh" class="outline-button" data-t="refresh">Refresh</button></div>
+        <div class="rr-tabs" aria-label="Report views" data-t-aria="reportViews"><button type="button" data-scope="public" aria-pressed="true" data-t="publicReports">Reviewed reports</button><button type="button" data-scope="mine" aria-pressed="false" data-t="myReports" hidden>My reports</button><button type="button" data-scope="teams" aria-pressed="false" data-t="myTeams" hidden>My teams</button><button type="button" data-scope="admin" aria-pressed="false" data-t="adminDashboard" hidden>Administrator dashboard</button></div>
+        <p id="admin-hint" class="rr-caption" data-t="adminHint" hidden>Review submissions, assign a responsible team, and record progress. Notes and team labels become public when a report is approved.</p>
+        <form id="filters" class="rr-filters"><label><span data-t="search">Search</span><input name="q" type="search" maxlength="100"></label><label><span data-t="area">Area</span><select name="area" data-options="areas" data-all="true"></select></label><label><span data-t="category">Category</span><select name="category" data-options="categories" data-all="true"></select></label><label><span data-t="status">Status</span><select name="status" data-options="statuses" data-all="true"></select></label><button class="button" type="submit" data-t="filter">Apply filters</button></form>
+        <p id="list-message" role="status"></p>
+        <div id="report-list" class="rr-report-grid" aria-live="polite"></div>
+        <div class="rr-pagination"><button id="previous" class="outline-button" data-t="previous">Previous</button><span id="page-label"></span><button id="next" class="outline-button" data-t="next">Next</button></div>
+      </section>
+    </section>
+  </main>
+  <dialog id="auth-dialog" class="rr-dialog"><div class="rr-panel-heading"><h2 data-t="account">Your account</h2><button type="button" data-close="auth-dialog" class="outline-button" data-t="close">Close</button></div><p class="rr-caption" data-t="accountHint">Choose a username rather than sharing personal contact details.</p><form id="auth-form"><label><span data-t="username">Username</span><input name="username" autocomplete="username" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_]+" dir="ltr"><small data-t="usernameHint">3–32 English letters, numbers, or underscores.</small></label><label><span data-t="password">Password</span><input name="password" type="password" autocomplete="current-password" required maxlength="128" dir="ltr"></label><p class="rr-caption" data-t="passwordHint">New accounts need a password of at least 12 characters.</p><div class="rr-form-actions"><button type="submit" name="action" value="login" class="button" data-t="signIn">Sign in</button><button type="submit" name="action" value="register" class="outline-button" data-t="register">Create account</button></div><p id="auth-message" role="status"></p></form></dialog>
+  <dialog id="report-dialog" class="rr-dialog rr-detail-dialog"><div class="rr-panel-heading"><h2 data-t="reportDetails">Report details</h2><button type="button" data-close="report-dialog" class="outline-button" data-t="close">Close</button></div><p id="detail-message" role="status"></p><div id="report-detail"></div></dialog>
+  <footer class="site-footer section-shell"><div class="brand"><img class="brand-logo" src="img/kurdistan-flag.svg" width="48" height="32" alt="Kurdistan flag" data-t-alt="flag"><span><strong>Green</strong> Kurdistan <small>ژینگەی کوردستان</small></span></div><p data-t="footer">Built for our community. Starting with Knowledge University, Erbil.</p><span class="footer-line" data-t="studentProject">Independent student project</span></footer>
+</body>
+</html>

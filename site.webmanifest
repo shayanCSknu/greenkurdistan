@@ -1,0 +1,16 @@
+{
+  "short_name": "Green Kurdistan",
+  "name": "Green Kurdistan Impact Lab",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6f5ef",
+  "theme_color": "#183e30"
+}

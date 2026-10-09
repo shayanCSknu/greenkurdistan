@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="600" gradientUnits="userSpaceOnUse"><stop stop-color="#e5e4cc"/><stop offset="1" stop-color="#b4c3a0"/></linearGradient>
+    <linearGradient id="valley" x1="300" y1="350" x2="300" y2="600" gradientUnits="userSpaceOnUse"><stop stop-color="#49715a"/><stop offset="1" stop-color="#183e30"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h600v600H0z"/>
+  <circle cx="398" cy="135" r="57" fill="#dfbd69"/>
+  <circle cx="398" cy="135" r="73" stroke="#dfbd69" stroke-opacity=".35"/>
+  <path d="M0 322 86 237 136 275 255 152 309 225 342 208 468 313 533 246 600 285v315H0Z" fill="#a4b49a"/>
+  <path d="m190 220 65-68 54 73-44-21-19 17-13-21Z" fill="#eeedda"/>
+  <path d="M0 372 119 290 179 328 327 237 410 320 443 303 600 386v214H0Z" fill="#718e72"/>
+  <path d="m327 237-44 57 43-21 36 18Z" fill="#c4cfb0"/>
+  <path d="M0 420c105-114 167-75 247-34s165-78 244-64 84 46 109 36v242H0Z" fill="#50755d"/>
+  <path d="M0 435c79-30 135-1 205 34s143-1 210-32 132-28 185-13v176H0Z" fill="url(#valley)"/>
+  <path d="M351 377c-68 25-98 43-55 63s112 30 50 64-67 64-53 96h72c-49-38-36-53 18-83s25-60-42-78-32-40 10-62Z" fill="#b5c4a0" opacity=".75"/>
+  <path d="M0 511c115-46 184-20 245 10s137 48 355-23v102H0Z" fill="#183e30"/>
+  <g stroke="#d7dfbd" stroke-opacity=".18"><path d="M-20 471c88-35 135-13 202 22M10 483c74-26 113-4 145 10M405 466c66-24 126-32 209-17M430 480c62-20 99-21 158-12"/></g>
+  <g stroke="#526d56" stroke-width="2" stroke-linecap="round"><path d="m108 153 8-4 8 4m12 15 6-3 6 3m19-38 8-4 8 4"/></g>
+</svg>
