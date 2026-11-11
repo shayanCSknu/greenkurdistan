@@ -197,6 +197,9 @@ h1,h2,h3,p {
 h1,h2,h3 {
   font-weight:400
 }
+h2 {
+  font-family:var(--display)
+}
 .hero {
   display:grid;
   grid-template-columns:1.08fr 1fr;
@@ -504,8 +507,8 @@ textarea {
   background:#f1e6c8
 }
 .tool-icon.purple {
-  color:#6e5c87;
-  background:#ece7f3
+  color:#2f6a4f;
+  background:#e2ece3
 }
 .tool-icon.blue {
   color:#3e6479;
@@ -985,7 +988,7 @@ textarea {
   font-size:11px
 }
 .compare-scene {
-  height:275px;
+  height:320px;
   position:relative;
   overflow:hidden;
   border-radius:6px;
@@ -995,14 +998,11 @@ textarea {
 .scene-clean,.scene-dirty {
   position:absolute;
   inset:0;
-  background:url('../img/kurdistan-landscape.svg') center/cover
+  background:url('../img/kurdistan-landscape.svg') center 62%/cover
 }
 .scene-dirty {
-  width:50%;
   filter:grayscale(1) sepia(.5);
-  background-size:auto 100%;
-  background-position:left center;
-  border-right:2px solid #fff
+  clip-path:inset(0 50% 0 0)
 }
 .compare-scene input {
   position:absolute;
@@ -1436,4 +1436,4 @@ textarea {
 .server-help{margin-block:20px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
 .server-help p{margin:0 0 12px;color:var(--muted)}
 
-.toolkit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.map-toolbar{display:flex;align-items:end;gap:16px;flex-wrap:wrap;margin-block:20px}.map-toolbar label{font-size:12px;color:var(--muted)}.map-toolbar select{min-width:180px}.map-city-marker{display:grid;place-items:center;border:2px solid #fff;border-radius:50%;background:#286047;color:#fff;box-shadow:0 2px 8px #0004;width:24px;height:24px;font-size:12px}.kurdistan-map.leaflet-container{background:#dce9ee}.map-detail .text-link{display:block;margin-top:18px}@media(max-width:700px){.toolkit-grid{grid-template-columns:1fr}.map-toolbar label{flex:1}}
+.toolkit-grid{grid-template-columns:1fr}.toolkit-grid>article:last-child{grid-column:auto}.toolkit-grid .calculator{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;align-items:end}.toolkit-grid .calculator>:not(label){grid-column:1/-1}.toolkit-grid .calculator>.button{justify-self:start}.map-toolbar{display:flex;align-items:end;gap:16px;flex-wrap:wrap;margin-block:20px}.map-toolbar label{font-size:12px;color:var(--muted)}.map-toolbar select{min-width:180px}.map-city-marker{display:grid;place-items:center;border:2px solid #fff;border-radius:50%;background:#286047;color:#fff;box-shadow:0 2px 8px #0004;width:24px;height:24px;font-size:12px}.kurdistan-map.leaflet-container{background:#dce9ee}.map-detail .text-link{display:block;margin-top:18px}@media(max-width:700px){.toolkit-grid{grid-template-columns:1fr}.toolkit-grid .calculator{grid-template-columns:1fr}.map-toolbar label{flex:1}}

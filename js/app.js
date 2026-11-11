@@ -41,7 +41,9 @@ const locations = window.KURDISTAN_CITIES || {
   halabja: { name: 'Helebçe · Halabja', lat: 35.18, lon: 45.98 },
   shaqlawa: { name: 'Şeqlawe · Shaqlawa', lat: 36.40, lon: 44.32 }
 };
-const weatherIcon = code => code === 0 ? ['☀', 'Clear skies'] : [1, 2].includes(code) ? ['⛅', 'Partly cloudy'] : code === 3 ? ['☁', 'Cloudy'] : [45, 48].includes(code) ? ['〰', 'Foggy'] : [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code) ? ['☂', 'Rainy'] : [71, 73, 75, 77, 85, 86].includes(code) ? ['❄', 'Snowy'] : [95, 96, 99].includes(code) ? ['ϟ', 'Stormy'] : ['?', 'Unknown conditions'];
+// U+FE0E asks for the plain symbol, so every forecast icon matches instead of mixing in colour emoji.
+const weatherIcon = code => { const [icon, text] = baseWeatherIcon(code); return [icon + '︎', text]; };
+const baseWeatherIcon = code => code === 0 ? ['☀', 'Clear skies'] : [1, 2].includes(code) ? ['⛅', 'Partly cloudy'] : code === 3 ? ['☁', 'Cloudy'] : [45, 48].includes(code) ? ['〰', 'Foggy'] : [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code) ? ['☂', 'Rainy'] : [71, 73, 75, 77, 85, 86].includes(code) ? ['❄', 'Snowy'] : [95, 96, 99].includes(code) ? ['ϟ', 'Stormy'] : ['?', 'Unknown conditions'];
 const fetchLive = url => fetch(url, typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? { signal: AbortSignal.timeout(15000) } : {});
 
 let weatherRequest = 0;
@@ -162,10 +164,13 @@ if ($('#calculate-button')) {
   calculateCarbon();
 }
 
+// Keep the copyright year current without editing every page each January.
+document.querySelectorAll('.footer-year').forEach(element => { element.textContent = String(new Date().getFullYear()); });
+
 const quizQuestions = [
-  { question: 'Which action saves the most water at home?', answers: ['Leaving the tap running', 'Taking shorter showers', 'Washing one item at a time'], correct: 1 },
+  { question: 'Which action saves the most water at home?', answers: ['Boiling only the water you need', 'Taking shorter showers', 'Washing one item at a time'], correct: 1 },
   { question: 'Which item belongs in a paper recycling bin?', answers: ['A clean newspaper', 'A used battery', 'A food-covered box'], correct: 0 },
-  { question: 'Which is a renewable energy source?', answers: ['Coal', 'Oil', 'Solar power'], correct: 2 }
+  { question: 'Which is a renewable energy source?', answers: ['Coal', 'Natural gas', 'Solar power'], correct: 2 }
 ];
 let questionIndex = 0;
 function renderQuiz() {
@@ -320,7 +325,7 @@ if ($('#mission-done')) {
 
 if ($('#compare-slider')) $('#compare-slider').addEventListener('input', event => {
   const value = event.target.value;
-  $('.scene-dirty').style.width = `${value}%`;
+  $('.scene-dirty').style.clipPath = `inset(0 ${100 - value}% 0 0)`;
   $('.slider-handle').style.left = `${value}%`;
   $('#compare-label').textContent = value < 50 ? 'A greener city' : value > 50 ? 'A city needing care' : 'Compare both futures';
 });

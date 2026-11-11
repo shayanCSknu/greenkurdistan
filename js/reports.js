@@ -3,7 +3,7 @@
   const $ = selector => document.querySelector(selector);
   const groups = {
     categories: ['water','waste','green-space','pollution'],
-    areas: ['knowledge-university','ankawa','baharka',...Object.keys(window.KURDISTAN_CITIES||{erbil:0,shaqlawa:0}),'other'],
+    areas: ['knowledge-university','ankawa','baharka',...Object.keys(window.KURDISTAN_CITIES||{erbil:0,shaqlawa:0}).sort((a,b)=>['IQ','TR','IR','SY'].indexOf(window.KURDISTAN_CITIES?.[a]?.country)-['IQ','TR','IR','SY'].indexOf(window.KURDISTAN_CITIES?.[b]?.country)),'other'],
     statuses: ['submitted','reviewed','in_progress','resolved','rejected'],
     urgencies: ['normal','high']
   };
@@ -91,7 +91,7 @@
     for (const key of ['total','reviewed','in_progress','resolved']) {
       const card = el('div',null,'rr-stat');
       const value = !stats ? '—' : key === 'total' ? Object.values(counts).reduce((a,b)=>a+b,0) : counts[key] || 0;
-      card.append(el('strong',value),el('span',t(key))); container.append(card);
+      card.append(el('strong',value),el('span',t(key === 'reviewed' ? 'awaitingAction' : key))); container.append(card);
     }
     const breakdown = $('#breakdown'); breakdown.replaceChildren();
     for (const [key,label] of [['areas','area'],['categories','category']]) {
@@ -121,9 +121,11 @@
       button.addEventListener('click',()=>showReport(report.id)); article.append(button); container.append(article);
     }
     $('#page-label').textContent = t('page',{page:pages ? page : 0,pages});
+    $('.rr-pagination').hidden = pages <= 1;
     $('#previous').disabled = page <= 1;
     $('#next').disabled = page >= pages;
-    $('#list-message').textContent = reports.length ? t('results',{count:reportTotal}) : t('noReports');
+    const filtered = [...new FormData($('#filters')).values()].some(value => value && value !== 'all');
+    $('#list-message').textContent = reports.length ? t('results',{count:reportTotal}) : t(filtered ? 'noReports' : 'noReportsYet');
   }
   async function refresh({quiet = false, preserveDetail = false} = {}) {
     const ownSequence = ++sequence;

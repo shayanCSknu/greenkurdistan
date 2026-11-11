@@ -48,7 +48,9 @@
     message=reason||'Regional overview works without external map tiles. Select a city or drag and zoom the map.';render();
   }
   if(window.L&&window.REGION_GEOJSON){
-    map=L.map(host,{scrollWheelZoom:true,minZoom:3,maxZoom:19,zoomControl:true}).setView([36.19,44.01],16);
+    map=L.map(host,{scrollWheelZoom:false,minZoom:3,maxZoom:19,zoomControl:true}).setView([36.19,44.01],16);
+    // Wheel zoom only after the visitor clicks the map, so scrolling the page never gets trapped.
+    map.on('click focus',()=>map.scrollWheelZoom.enable());map.on('mouseout blur',()=>map.scrollWheelZoom.disable());
     region=L.geoJSON(window.REGION_GEOJSON,{style:{color:'#879e90',weight:1,fillColor:'#e9eee2',fillOpacity:1},interactive:false,
       attribution:'<a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a> (public domain)'}).addTo(map);
     for(const [key,city]of Object.entries(cities)){

@@ -26,9 +26,12 @@
     select.replaceChildren(...keys.map(key=>{const node=el('option',tr(names[key]||key));node.value=key;return node;}));
     if(keys.includes(old))select.value=old;
     const key=select.value,unit=result.units[key],valid=result.rows.filter(row=>typeof row[key]==='number'),summary=$('#history-summary');summary.replaceChildren();
-    for(const [label,value] of [['Available values',valid.length],['Missing values',result.rows.length-valid.length],['Latest available value',valid.length?`${valid.at(-1)[key]} ${unit} · ${valid.at(-1).time}`:tr('Unavailable')]]){const card=el('article');card.append(el('strong',String(value)),el('span',tr(label)));summary.append(card);}
+    for(const [label,value] of [['Available values',valid.length],['Missing values',result.rows.length-valid.length],['Latest available value',valid.length?`${round(valid.at(-1)[key])} ${unit} · ${valid.at(-1).time}`:tr('Unavailable')]]){const card=el('article');card.append(el('strong',String(value)),el('span',tr(label)));summary.append(card);}
     draw(key);table(keys);provenance();
   }
+  // Two decimals on screen; the CSV download keeps the full source precision.
+  function round(value){return typeof value==='number'?String(Math.round(value*100)/100):String(value??'');}
+  function readableTime(value){const date=new Date(value);if(Number.isNaN(date.getTime()))return value||'';const language=window.I18N?.language||'en';return date.toLocaleString(language==='ku'?'ckb-IQ':language==='ar'?'ar-IQ':'en-GB',{dateStyle:'medium',timeStyle:'short'});}
   function draw(key){
     const svg=$('#history-chart');svg.replaceChildren();svg.setAttribute('aria-label',tr('Historical data chart'));
     const node=(name,attrs,text)=>{const x=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [key,value]of Object.entries(attrs))x.setAttribute(key,value);if(text!==undefined)x.textContent=text;svg.append(x);return x;};
@@ -38,7 +41,9 @@
     const timestamp=row=>Date.parse(row.time.length===4?row.time+'-01-01T00:00Z':row.time.length===7?row.time+'-01T00:00Z':row.time.length===10?row.time+'T00:00Z':row.time+'Z');
     const first=timestamp(rows[0]),last=timestamp(rows.at(-1));
     const x=row=>75+(timestamp(row)-first)/Math.max(last-first,1)*885,y=value=>275-(value-min)/(max-min)*240;
-    for(let i=0;i<5;i++){const value=min+(max-min)*i/4;node('line',{x1:75,x2:960,y1:y(value),y2:y(value),class:'grid-line'});node('text',{x:65,y:y(value)+4,'text-anchor':'end'},value.toFixed(2));}
+    // Round-number gridlines (e.g. -0.5, 0, 0.5, 1) are easier to read than evenly split raw values.
+    const rough=(max-min)/6,magnitude=10**Math.floor(Math.log10(rough)),step=[1,2,2.5,5,10].find(m=>m*magnitude>=rough)*magnitude,decimals=Math.max(0,-Math.floor(Math.log10(step)+1e-9)+(step/magnitude===2.5?1:0));
+    for(let value=Math.ceil(min/step)*step;value<=max+step*1e-6;value+=step){node('line',{x1:75,x2:960,y1:y(value),y2:y(value),class:'grid-line'});node('text',{x:65,y:y(value)+4,'text-anchor':'end'},(Math.abs(value)<step/1e6?0:value).toFixed(decimals));}
     node('text',{x:75,y:20},`${tr(names[key])} (${result.units[key]})`);node('text',{x:75,y:310},rows[0].time);node('text',{x:960,y:310,'text-anchor':'end'},rows.at(-1).time);
     let path='',connected=false,lastTime=null;
     for(const row of rows){
@@ -46,19 +51,19 @@
       if(lastTime!==null&&current-lastTime>expected)connected=false;lastTime=current;
       if(typeof row[key]!=='number'){connected=false;continue;}
       path+=`${connected?'L':'M'}${x(row).toFixed(2)},${y(row[key]).toFixed(2)} `;connected=true;
-      if(rows.length<=200){const point=node('circle',{cx:x(row),cy:y(row[key]),r:2.5,class:'data-point'});point.append(el('title',`${row.time}: ${row[key]} ${result.units[key]}`));}
+      if(rows.length<=200){const point=node('circle',{cx:x(row),cy:y(row[key]),r:2.5,class:'data-point'});point.append(el('title',`${row.time}: ${round(row[key])} ${result.units[key]}`));}
     }
     node('path',{d:path,class:'data-line'});
   }
   function table(keys){
     const header=el('tr');header.append(el('th',tr('Date')),...keys.map(key=>el('th',`${tr(names[key]||key)} (${result.units[key]})`)));$('#history-table thead').replaceChildren(header);
-    const body=$('#history-table tbody');body.replaceChildren();for(const row of result.rows.slice((page-1)*30,page*30)){const trNode=el('tr');trNode.append(el('td',row.time),...keys.map(key=>el('td',row[key]===null?tr('Missing'):String(row[key]))));body.append(trNode);}
+    const body=$('#history-table tbody');body.replaceChildren();for(const row of result.rows.slice((page-1)*30,page*30)){const trNode=el('tr');trNode.append(el('td',row.time),...keys.map(key=>el('td',row[key]===null?tr('Missing'):round(row[key]))));body.append(trNode);}
     const pages=Math.ceil(result.rows.length/30);$('#history-page').textContent=tr('Page {page} of {pages}',{page:pages?page:0,pages});$('#history-previous').disabled=page<=1;$('#history-next').disabled=page>=pages;
   }
   function provenance(){
     const box=$('#history-source');box.replaceChildren();
     const dl=el('dl');
-    const entries=[['Provider',result.source.name],['Spatial scope',result.dataset==='global'?tr('Worldwide'):tr($('#history-city option[value="'+result.city+'"]').textContent)],['Data type',tr({global_analysis:'Observation-based statistical analysis',reanalysis:'Model-assisted reanalysis',archived_model:'Archived air-quality model estimates'}[result.source.kind])],['Spatial resolution',result.source.resolution],['Timezone',result.source.timezone],['Retrieved at',result.fetchedAt],['Latest source period',result.availableThrough||tr('Unavailable')],['Cache status',tr(result.stale?'Previously retrieved real data; source refresh failed.':'Source retrieved successfully.')]];
+    const entries=[['Provider',result.source.name],['Spatial scope',result.dataset==='global'?tr('Worldwide'):tr($('#history-city option[value="'+result.city+'"]').textContent)],['Data type',tr({global_analysis:'Observation-based statistical analysis',reanalysis:'Model-assisted reanalysis',archived_model:'Archived air-quality model estimates'}[result.source.kind])],['Spatial resolution',result.source.resolution],['Timezone',result.source.timezone],['Retrieved at',readableTime(result.fetchedAt)],['Latest source period',result.availableThrough||tr('Unavailable')],['Cache status',tr(result.stale?'Previously retrieved real data; source refresh failed.':'Source retrieved successfully.')]];
     if(result.source.baseline)entries.push(['Anomaly reference period',result.source.baseline]);
     if(result.grid)entries.push(['Requested coordinates',`${result.requested.latitude}, ${result.requested.longitude}`],['Source grid coordinates',`${result.grid.latitude}, ${result.grid.longitude}`]);
     for(const [key,value]of entries)dl.append(el('dt',tr(key)),el('dd',value));box.append(dl);

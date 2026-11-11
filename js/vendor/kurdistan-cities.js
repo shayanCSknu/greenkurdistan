@@ -192,7 +192,7 @@
     "ar": "بدليس"
   },
   "mus": {
-    "name": "Mus",
+    "name": "Muş",
     "lat": 38.73163,
     "lon": 41.48482,
     "country": "TR",
@@ -202,7 +202,7 @@
     "ar": "موش"
   },
   "bingol": {
-    "name": "Bingol",
+    "name": "Bingöl",
     "lat": 38.88472,
     "lon": 40.49389,
     "country": "TR",
@@ -222,7 +222,7 @@
     "ar": "درسيم · تونجلي"
   },
   "sanliurfa": {
-    "name": "Sanliurfa",
+    "name": "Şanlıurfa",
     "lat": 37.16708,
     "lon": 38.79392,
     "country": "TR",
@@ -232,7 +232,7 @@
     "ar": "الرها · شانلي أورفا"
   },
   "agri": {
-    "name": "Agri",
+    "name": "Ağrı",
     "lat": 39.71467,
     "lon": 43.04015,
     "country": "TR",
@@ -402,7 +402,7 @@
     "ar": "العمادية"
   },
   "diyarbakir": {
-    "name": "Diyarbakir",
+    "name": "Diyarbakır",
     "lat": 37.91363,
     "lon": 40.21721,
     "country": "TR",
@@ -412,7 +412,7 @@
     "ar": "آمد · ديار بكر"
   },
   "sirnak": {
-    "name": "Sirnak",
+    "name": "Şırnak",
     "lat": 37.51393,
     "lon": 42.45432,
     "country": "TR",
