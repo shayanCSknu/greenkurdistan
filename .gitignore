@@ -6,3 +6,4 @@ dist
 .cache
 data/
 .test-data/
+.wrangler
