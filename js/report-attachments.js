@@ -16,6 +16,7 @@
     if(added.some(file=>!validate(file))){input.setCustomValidity(tr('Use up to three photos (3 MB each) or MP4/WebM videos (15 MB each).'));input.reportValidity();return;}
     const merged=[...files];for(const file of added)if(!merged.some(old=>old.name===file.name&&old.size===file.size&&old.lastModified===file.lastModified))merged.push(file);
     if(merged.length>3){input.setCustomValidity(tr('You can attach up to three files in total.'));input.reportValidity();return;}
+    if(merged.reduce((sum,file)=>sum+file.size,0)>15*1024*1024){input.setCustomValidity(tr('Attachments must total 15 MB or less.'));input.reportValidity();return;}
     files=merged;input.setCustomValidity('');input.value='';render();
   });
   function clear(){files=[];input.value='';input.setCustomValidity('');render();}

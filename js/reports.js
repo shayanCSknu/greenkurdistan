@@ -61,7 +61,7 @@
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), path==='/api/reports'&&method==='POST'?120000:30000);
     try {
-      const response = await fetch(path, { method, credentials:'same-origin', cache:'no-store', signal:controller.signal,
+      const response = await fetch(window.GreenRuntime?.apiUrl(path) || path, { method, credentials:'include', cache:'no-store', signal:controller.signal,
         headers: method === 'GET' ? {} : { 'Content-Type':'application/json', 'X-Green-Request':'1' },
         body: payload === undefined ? undefined : JSON.stringify(payload) });
       if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('offline');

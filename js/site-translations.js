@@ -3,6 +3,7 @@ window.SITE_TEXT = {
   'Remove attachment':['فایل بسڕەوە','احذف المرفق'],
   'Use up to three photos (3 MB each) or MP4/WebM videos (15 MB each).':['تا سێ وێنە (٣ MB) یان ڤیدیۆی MP4/WebM (١٥ MB) زیاد بکە.','استخدم حتى ثلاث صور (3 MB لكل صورة) أو فيديوهات MP4/WebM (15 MB لكل فيديو).'],
   'You can attach up to three files in total.':['دەتوانیت تا سێ فایل زیاد بکەیت.','يمكنك إرفاق ثلاثة ملفات إجمالاً.'],
+  'Attachments must total 15 MB or less.':['کۆی قەبارەی فایلەکان دەبێت ١٥ MB یان کەمتر بێت.','يجب ألا يتجاوز مجموع المرفقات 15 MB.'],
   'Iraqi Kurdistan and nearby cities':['کوردستانی عێراق و شارە نزیکەکان','كردستان العراق والمدن القريبة'],
   'Turkey':['تورکیا','تركيا'], 'Iran':['ئێران','إيران'], 'Syria':['سووریا','سوريا'],
   'Cities across Kurdistan':['شارەکانی کوردستان','مدن كردستان'],

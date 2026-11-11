@@ -19,6 +19,12 @@
     box.append(text, link);
     document.querySelector('main').prepend(box);
   }
-  window.GreenRuntime = { showHelp };
+  // All API calls go through apiUrl so the API host can be changed in one place.
+  const apiOrigin = '';
+  function apiUrl(path) {
+    if (!path.startsWith('/api/')) throw new Error('Invalid API path');
+    return apiOrigin + path;
+  }
+  window.GreenRuntime = { showHelp, apiUrl, apiOrigin };
   if (staticPreview) showHelp();
 })();
