@@ -6,6 +6,7 @@ const { resolve, extname } = require('node:path');
 const { openStore } = require('./store');
 const { createClimateService } = require('./climate');
 const { communityRoutes } = require('./community');
+const { normalizeUsername } = require('./usernames');
 const { attachments,sendMedia } = require('./media');
 const derive = promisify(scrypt);
 const CATEGORIES = ['water', 'waste', 'green-space', 'pollution'];
@@ -20,6 +21,12 @@ class HttpError extends Error {
   constructor(status, code) { super(code); this.status = status; this.code = code; }
 }
 const fail = (status, code) => { throw new HttpError(status, code); };
+// Fixed list of sort orders; user input only picks a key, never raw SQL.
+const SORTS = {
+  updated: 'updated_at DESC,id DESC',
+  newest: 'created_at DESC,id DESC',
+  support: '(SELECT COUNT(*) FROM report_supporters s WHERE s.report_id=reports.id) DESC,updated_at DESC,id DESC'
+};
 function field(value, min, max) {
   if (typeof value !== 'string' || value.trim().length < min || value.trim().length > max) fail(400, 'invalid_input');
   return value.trim();
@@ -146,8 +153,8 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
         if (['/api/register','/api/login'].includes(path) && method === 'POST') {
           rate(req, 'auth', 30);
           const data = await body(req);
-          const username = field(data.username, 3, 32).toLowerCase();
-          if (!/^[a-z0-9_]+$/.test(username) || typeof data.password !== 'string' || data.password.length > 128) fail(400, 'invalid_credentials_format');
+          const username = normalizeUsername(data.username);
+          if (!username || typeof data.password !== 'string' || data.password.length > 128) fail(400, 'invalid_credentials_format');
           if (path === '/api/register') {
             if (data.password.length < 12) fail(400, 'password_short');
             if (db.prepare('SELECT id FROM users WHERE username=?').get(username)) fail(409, 'username_taken');
@@ -198,7 +205,9 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
           if (!Number.isSafeInteger(page) || page < 1 || page > 100000) fail(400, 'invalid_input');
           const condition = where.join(' AND ');
           const total = db.prepare(`SELECT COUNT(*) AS count FROM reports WHERE ${condition}`).get(...values).count;
-          const rows = db.prepare(`SELECT * FROM reports WHERE ${condition} ORDER BY updated_at DESC,id DESC LIMIT 12 OFFSET ?`).all(...values,(page-1)*12);
+          const order = SORTS[url.searchParams.get('sort') || 'updated'];
+          if (!order) fail(400, 'invalid_input');
+          const rows = db.prepare(`SELECT * FROM reports WHERE ${condition} ORDER BY ${order} LIMIT 12 OFFSET ?`).all(...values,(page-1)*12);
           return json(res, 200, { reports: rows.map(serialize), total, page, pages: Math.ceil(total/12) });
         }
         if (path === '/api/reports' && method === 'POST') {

@@ -133,3 +133,31 @@ test('static site serves reporting assets with security headers and blocks cachi
   const source=(await guest.request('/sw.js')).data.toString(); assert.match(source,/url\.pathname\.startsWith\('\/api\/'\)/);
   assert.equal((await guest.request('/api/session')).headers.get('cache-control'),'no-store');
 });
+
+test('usernames accept Kurdish or Arabic letters, fold look-alikes and reject mixed scripts',async t=> {
+  const { normalizeUsername } = require('../server/usernames');
+  assert.equal(normalizeUsername('Shayan_1'),'shayan_1');
+  assert.equal(normalizeUsername('شایان'),'شایان');
+  assert.equal(normalizeUsername('علي٢'),'علی2','Arabic yeh and digits fold to one form');
+  assert.equal(normalizeUsername('shaشایان'),null,'mixed scripts are rejected');
+  assert.equal(normalizeUsername('ab\u200bc'),null,'invisible characters are rejected');
+  assert.equal(normalizeUsername('ab'),null);
+  const app=await fixture(t), first=app.client(), second=app.client();
+  assert.equal((await first.register('کوردستان')).status,201);
+  assert.equal((await second.register('كوردستان')).data.error,'username_taken','Arabic kaf matches Kurdish keheh');
+  assert.equal((await second.request('/api/login','POST',{username:'كوردستان',password:'Test-password-12345'})).status,200);
+});
+
+test('public reports can be sorted by newest or most supported',async t=> {
+  const app=await fixture(t), member=app.client(), fan=app.client(); await member.register('sort_owner'); await fan.register('sort_fan');
+  for (const title of ['First report','Second report']) await member.request('/api/reports','POST',report({title}));
+  app.db.prepare("UPDATE reports SET status='reviewed'").run();
+  app.db.prepare("UPDATE reports SET created_at=CASE title WHEN 'First report' THEN '2026-01-01T00:00:00.000Z' ELSE '2026-02-01T00:00:00.000Z' END, updated_at=CASE title WHEN 'First report' THEN '2026-03-01T00:00:00.000Z' ELSE '2026-02-01T00:00:00.000Z' END").run();
+  const first=app.db.prepare("SELECT id FROM reports WHERE title='First report'").get().id;
+  assert.equal((await member.request('/api/reports?sort=newest')).data.reports[0].title,'Second report');
+  assert.equal((await member.request('/api/reports')).data.reports[0].title,'First report');
+  app.db.prepare("UPDATE reports SET updated_at='2026-01-01T00:00:00.000Z' WHERE id=?").run(first);
+  assert.equal((await fan.request(`/api/reports/${first}/support`,'POST',{supported:true})).status,200);
+  assert.equal((await member.request('/api/reports?sort=support')).data.reports[0].title,'First report');
+  assert.equal((await member.request('/api/reports?sort=title;DROP')).status,400);
+});

@@ -1,5 +1,6 @@
 // Administrator access is granted only by the person operating the server.
 const { openStore } = require('./store');
+const { normalizeUsername } = require('./usernames');
 const [command, username] = process.argv.slice(2);
 if (!['promote', 'demote'].includes(command) || !username) {
   console.error('Usage: node server/manage.js promote|demote USERNAME');
@@ -7,7 +8,7 @@ if (!['promote', 'demote'].includes(command) || !username) {
 } else {
   const db = openStore();
   try {
-    const user = db.prepare('SELECT id FROM users WHERE username = ?').get(username);
+    const user = db.prepare('SELECT id FROM users WHERE username = ?').get(normalizeUsername(username));
     if (!user) throw new Error('Account not found. Register this username on the site first.');
     db.prepare('UPDATE users SET role = ? WHERE id = ?').run(command === 'promote' ? 'admin' : 'member', user.id);
     // A fresh sign-in is required after a role change.

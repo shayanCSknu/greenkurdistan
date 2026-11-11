@@ -114,7 +114,7 @@
         image.src = `/api/reports/${report.id}/photos/before?v=${report.version}`;
         image.addEventListener('error',()=>{image.hidden=true;},{once:true});article.append(image);
       }
-      article.append(badge(report.status),el('h3',report.title),el('p',`${t(report.category)} · ${t(report.area)}`),el('p',report.location),el('p',`${t('updated')}: ${date(report.updated_at)}`));
+      article.append(badge(report.status),el('h3',report.title),el('p',`${t(report.category)} · ${t(report.area)}`),el('p',report.location),el('p',`${t('created')}: ${date(report.created_at)}`,'rr-caption'),el('p',`${t('updated')}: ${date(report.updated_at)}`,'rr-caption'));
       if (report.brief?.urgency === 'high') article.append(el('span',t('high'),'rr-priority'));
       if (report.community) article.append(el('p',t('communityCounts',{members:report.community.members,done:report.community.completedTasks,tasks:report.community.totalTasks,support:report.community.supporters}),'rr-caption'));
       const button = el('button',`${t('view')} #${report.id}`,'button button-small'); button.type = 'button';
