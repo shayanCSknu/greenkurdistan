@@ -76,3 +76,47 @@ html[dir=rtl] .main-nav a.active:after { left: auto; right: 0; }
 @media(max-width:550px) { .rr-report-grid,.rr-form-grid,.rr-breakdown-grid,.rr-photo-grid { grid-template-columns: 1fr; }.rr-full { grid-column: auto; }.rr-panel,.rr-dialog { padding: 20px; }.rr-filters { grid-template-columns: 1fr; }.rr-toolbar-actions { width: 100%; }.rr-metadata { grid-template-columns: 1fr; }.rr-heading h1 { font-size: 38px; }.rr-panel-heading h2 { font-size: 27px; }.rr-stat { padding: 17px; } }
 .rr-journey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-block:24px}.rr-journey article{padding:22px}.rr-journey span{color:var(--green);font-size:12px;font-weight:700}.rr-journey h3{font:22px var(--display);margin-block:12px}.rr-journey p{font-size:13px;color:var(--muted)}.rr-priority{display:inline-block;padding:5px 10px;border-radius:6px;background:var(--soft);color:var(--green);font-size:12px}.rr-error-text{color:#b94a3a}.community-project{border-top:1px solid var(--line);margin-top:30px;padding-top:25px}.community-project h2{font:30px var(--display)}.community-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.community-team{padding:22px;margin-block:20px}.community-members{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none;padding:0}.community-members li{border:1px solid var(--line);padding:12px;border-radius:8px;font-size:13px}.community-members p{margin-block:5px;white-space:pre-wrap;overflow-wrap:anywhere}.community-form{background:var(--soft);border-radius:10px;padding:18px;margin-block:18px}.community-form label{margin-block:0 15px}.community-form .button{margin-top:5px}.community-project details>summary{cursor:pointer;margin-top:20px}.community-tasks,.community-activity{margin-block:28px}.community-task,.community-update{border:1px solid var(--line);border-radius:10px;padding:18px;margin-block:12px}.community-task[data-status="done"]{border-color:var(--green)}.community-task .rr-form-actions{justify-content:flex-start}.community-project progress{width:100%;height:10px;accent-color:var(--green)}.community-project strong,.community-project p{overflow-wrap:anywhere}.community-update .rr-preview{max-height:350px}.community-project form textarea{width:100%}body.dark .rr-error-text{color:#ffb5a5}@media(max-width:700px){.rr-journey,.community-members{grid-template-columns:1fr}.community-team,.community-form{padding:16px}}
 .rr-pagination[hidden]{display:none}
+
+/* Account card: shows clearly whether you are signed in */
+.rr-account { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 22px; margin-block: 28px; padding: 22px 26px; border: 1px solid var(--line); border-radius: 24px; background: var(--card); box-shadow: var(--shadow); }
+.rr-account[data-state=member],.rr-account[data-state=admin] { border-color: color-mix(in srgb, var(--gold, #f2b632) 55%, var(--line)); }
+.rr-avatar { flex: none; display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--soft); color: var(--green); font: 700 26px/1 var(--display); }
+.rr-avatar svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.rr-account[data-state=member] .rr-avatar { background: var(--gold, #f2b632); color: #12332a; }
+.rr-account[data-state=admin] .rr-avatar { background: var(--bar, #12332a); color: var(--gold, #f2b632); }
+.rr-account-text { flex: 1 1 260px; min-width: 0; }
+.rr-account-text p { margin: 0; }
+.rr-account-kicker { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.rr-account-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-block: 2px 4px !important; }
+.rr-account-name strong { font: 700 24px/1.2 var(--display); letter-spacing: -.02em; overflow-wrap: anywhere; }
+.rr-role { padding: 3px 10px; border-radius: 999px; background: var(--soft); color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+.rr-account[data-state=admin] .rr-role { background: var(--bar, #12332a); color: var(--gold, #f2b632); }
+#account-label { font-size: 13px; color: var(--muted); }
+.rr-account .rr-toolbar-actions { justify-content: flex-end; gap: 10px; }
+.rr-gold { background: var(--gold, #f2b632) !important; border-color: var(--gold, #f2b632) !important; color: #12332a !important; }
+.rr-link-button { padding: 6px 4px; border: 0; background: none; color: var(--green); font: inherit; font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.rr-flash { animation: rr-flash 1.4s ease-out; }
+@keyframes rr-flash { 0% { box-shadow: 0 0 0 0 #f2b63299; } 100% { box-shadow: 0 0 0 18px #f2b63200; } }
+@media (prefers-reduced-motion: reduce) { .rr-flash { animation: none; } }
+
+/* Sign-in / create-account dialog */
+.rr-auth { position: relative; width: min(440px,calc(100% - 32px)); padding: 30px 32px; border-radius: 24px; }
+.rr-close { position: absolute; top: 14px; inset-inline-end: 14px; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; }
+.rr-close:hover { background: var(--soft); }
+.rr-auth-tabs { display: flex; gap: 4px; width: max-content; max-width: calc(100% - 48px); padding: 4px; margin-bottom: 22px; border-radius: 999px; background: var(--soft); }
+.rr-auth-tabs button { padding: 9px 16px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.rr-auth-tabs [aria-selected=true] { background: var(--card); color: var(--ink); box-shadow: 0 1px 4px #0000001f; }
+.rr-auth h2 { margin: 0 0 6px; font: 700 28px/1.15 var(--display); letter-spacing: -.02em; }
+.rr-auth input { width: 100%; margin-top: 6px; }
+.rr-password { position: relative; display: block; }
+.rr-password input { padding-inline-end: 64px; }
+.rr-password .rr-link-button { position: absolute; top: 50%; inset-inline-end: 10px; transform: translateY(-40%); text-decoration: none; }
+.rr-auth .rr-register-only { display: none; }
+.rr-auth[data-mode=register] .rr-register-only { display: block; }
+#password-meter.rr-ok { color: var(--green); font-weight: 600; }
+#auth-message { min-height: 1em; margin: 4px 0 12px; font-size: 13px; }
+.rr-wide { width: 100%; justify-content: center; }
+.rr-auth-switch { margin: 16px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
+.rr-auth .rr-caption { margin-top: 12px; text-align: center; }
+#auth-subtitle { text-align: start; margin: 0 0 6px; }
+@media (max-width:550px) { .rr-account { padding: 20px; } .rr-account .rr-toolbar-actions { justify-content: flex-start; } .rr-auth { padding: 24px 20px; } }

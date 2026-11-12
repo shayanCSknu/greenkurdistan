@@ -97,7 +97,23 @@ Object.assign(window.RR_TEXT, {
   project_not_active:['Team work opens after review and closes when the report is resolved or rejected.','کاری تیم دوای پێداچوونەوە دەکرێتەوە و لە کاتی چارەسەر یان ڕەتکردنەوە دادەخرێت.','يفتح عمل الفريق بعد المراجعة ويغلق عند الحل أو الرفض.'],
   unfinished_tasks:['Complete or review the unfinished tasks before requesting resolution.','پێش داوای چارەسەر ئەرکە ناتەواوەکان تەواو بکە.','أكمل المهام غير المنجزة قبل طلب مراجعة الحل.'],
   evidence_required:['Attach a result photo when requesting resolution review.','لە کاتی داوای پێداچوونەوە بە چارەسەر وێنەی ئەنجام زیاد بکە.','أرفق صورة النتيجة عند طلب مراجعة الحل.'],
-  project_limit:['This project has reached its current capacity. Contact its coordinator.','ئەم پڕۆژەیە گەیشتووە بە سنووری ئێستای. پەیوەندی بە هەماهەنگکارەکە بکە.','بلغ المشروع سعته الحالية. تواصل مع المنسق.']
+  project_limit:['This project has reached its current capacity. Contact its coordinator.','ئەم پڕۆژەیە گەیشتووە بە سنووری ئێستای. پەیوەندی بە هەماهەنگکارەکە بکە.','بلغ المشروع سعته الحالية. تواصل مع المنسق.'],
+  // Account card and sign-in dialog
+  guestTitle:["You're not signed in",'نەچوویتە ژوورەوە','لم تسجّل الدخول بعد'],
+  guestHint:['Create a free account to report problems, join teams and follow your reports.','هەژمارێکی بێبەرامبەر دروست بکە بۆ ناردنی ڕاپۆرت، بەشداریکردن لە تیمەکان و بەدواداچوونی ڕاپۆرتەکانت.','أنشئ حساباً مجانياً للإبلاغ عن المشكلات والانضمام إلى الفرق ومتابعة بلاغاتك.'],
+  signedInAs:['Signed in as','چوویتە ژوورەوە وەک','مسجّل الدخول باسم'],
+  roleMember:['Member','ئەندام','عضو'], roleAdmin:['Administrator','بەڕێوەبەر','مسؤول'],
+  memberHint:['Report problems, join teams and follow your reports from here.','لێرەوە ڕاپۆرت بنێرە، بەشداری تیمەکان بکە و بەدواداچوونی ڕاپۆرتەکانت بکە.','من هنا يمكنك الإبلاغ عن المشكلات والانضمام إلى الفرق ومتابعة بلاغاتك.'],
+  adminHintShort:['You can review and manage every report.','دەتوانیت هەموو ڕاپۆرتەکان پێداچوونەوە و بەڕێوەببەیت.','يمكنك مراجعة جميع البلاغات وإدارتها.'],
+  welcomeBack:['Welcome back','بەخێربێیتەوە','مرحباً بعودتك'],
+  signInHint:['Sign in with your username and password.','بە ناوی بەکارهێنەر و وشەی نهێنییەکەت بچۆ ژوورەوە.','سجّل الدخول باسم المستخدم وكلمة المرور.'],
+  createTitle:['Create your free account','هەژمارێکی بێبەرامبەر دروست بکە','أنشئ حسابك المجاني'],
+  createHint:['It takes a few seconds. You only need a username and a password.','تەنها چەند چرکەیەک دەخایەنێت. تەنها ناوی بەکارهێنەر و وشەی نهێنیت پێویستە.','يستغرق ذلك ثوانٍ فقط. تحتاج فقط إلى اسم مستخدم وكلمة مرور.'],
+  noAccount:["Don't have an account?",'هەژمارت نییە؟','ليس لديك حساب؟'],
+  haveAccount:['Already have an account?','پێشتر هەژمارت هەیە؟','لديك حساب بالفعل؟'],
+  showPassword:['Show','پیشاندان','إظهار'], hidePassword:['Hide','شاردنەوە','إخفاء'],
+  passwordCount:['{count} of 12 characters','{count} لە ١٢ نووسە','{count} من 12 محرفاً'],
+  passwordOk:['Password length looks good ✓','درێژیی وشەی نهێنی باشە ✓','طول كلمة المرور جيد ✓']
 });
 
 for(const [key,city] of Object.entries(window.KURDISTAN_CITIES||{})) window.RR_TEXT[key]=[city.name,city.ku,city.ar];

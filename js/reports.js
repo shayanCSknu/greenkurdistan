@@ -50,7 +50,7 @@
     document.querySelectorAll('[data-t-aria]').forEach(node => node.setAttribute('aria-label',t(node.dataset.tAria)));
     document.querySelectorAll('[data-t-alt]').forEach(node => { node.alt = t(node.dataset.tAlt); });
     document.querySelectorAll('[data-options]').forEach(node => options(node,groups[node.dataset.options],node.dataset.all === 'true'));
-    updateAccount(); renderStats(); renderReports();
+    updateAccount(); updateMeter(); renderStats(); renderReports();
     if (selectedReport) {
       const root=$('#community-project'),draft=$('#admin-update[data-dirty]');
       if(root){window.CommunityUI?.retranslate(root);renderDetail(selectedReport,root,draft);}
@@ -74,9 +74,22 @@
     } finally { clearTimeout(timer); }
   }
   function errorMessage(selector, error) { message(selector,window.RR_TEXT[error.message] ? error.message : 'server_error'); }
+  const guestAvatar = $('#account-avatar').innerHTML;
+  let authMode = 'login';
+  function setText(target, key) { const node = typeof target === 'string' ? $(target) : target; node.dataset.t = key; node.textContent = t(key); }
   function updateAccount() {
-    $('#account-label').textContent = user ? t('signedIn',{name:user.username}) : t('guest');
+    const admin = user?.role === 'admin';
+    $('#account-card').dataset.state = !user ? 'guest' : admin ? 'admin' : 'member';
+    $('#account-kicker').textContent = t(user ? 'signedInAs' : 'account');
+    $('#account-name').textContent = user ? user.username : t('guestTitle');
+    $('#account-label').textContent = t(!user ? 'guestHint' : admin ? 'adminHintShort' : 'memberHint');
+    $('#account-role').hidden = !user;
+    if (user) $('#account-role').textContent = t(admin ? 'roleAdmin' : 'roleMember');
+    if (user) $('#account-avatar').textContent = user.username.charAt(0).toUpperCase();
+    else if (!$('#account-avatar svg')) $('#account-avatar').innerHTML = guestAvatar;
     $('#account-open').hidden = !!user;
+    $('#account-register').hidden = !!user;
+    $('#my-reports').hidden = !user;
     $('#sign-out').hidden = !user;
     $('[data-scope=mine]').hidden = !user;
     $('[data-scope=teams]').hidden = !user;
@@ -229,7 +242,7 @@
     }
     if (communityRoot) { container.append(communityRoot); return; }
     const projectRoot = window.CommunityUI?.mount(container,report,user,{api,t,el,date,normalizePhoto,
-      signIn:()=>{pendingCreate=false;$('#auth-dialog').showModal();},
+      signIn:()=>openAuth('login'),
       changed:async data=>{
         const latest = await api(`/api/reports/${report.id}`);
         if (!$('#report-dialog').open || selectedReport?.id !== report.id || container.querySelector('#community-project') !== projectRoot) return;
@@ -270,8 +283,33 @@
     try { return await normalizePhoto(selected); }
     catch { if (input.files[0] === selected) { input.setCustomValidity(t('invalid_photo')); message(feedback,'invalid_photo'); } return null; }
   }
+  function updateMeter() {
+    const meter = $('#password-meter'), length = $('#auth-form').elements.password.value.length;
+    meter.classList.toggle('rr-ok', length >= 12);
+    meter.textContent = !length ? t('passwordHint') : length < 12 ? t('passwordCount',{count:length}) : t('passwordOk');
+  }
+  function setAuthMode(mode) {
+    authMode = mode === 'register' ? 'register' : 'login';
+    const register = authMode === 'register', form = $('#auth-form');
+    $('#auth-dialog').dataset.mode = authMode;
+    $('#auth-tab-login').setAttribute('aria-selected',String(!register));
+    $('#auth-tab-register').setAttribute('aria-selected',String(register));
+    setText('#auth-title', register ? 'createTitle' : 'welcomeBack');
+    setText('#auth-subtitle', register ? 'createHint' : 'signInHint');
+    setText('#auth-switch-text', register ? 'haveAccount' : 'noAccount');
+    setText('#auth-switch', register ? 'signIn' : 'register');
+    form.querySelector('[value=login]').hidden = register;
+    form.querySelector('[value=register]').hidden = !register;
+    form.elements.password.autocomplete = register ? 'new-password' : 'current-password';
+    message('#auth-message',null); updateMeter();
+  }
+  function openAuth(mode, afterCreate = false) {
+    pendingCreate = afterCreate; setAuthMode(mode);
+    if (!$('#auth-dialog').open) $('#auth-dialog').showModal();
+    $('#auth-form').elements.username.focus();
+  }
   function openCreate() {
-    if (!user) { pendingCreate = true; $('#auth-dialog').showModal(); return; }
+    if (!user) { openAuth('register',true); return; }
     $('#create-panel').hidden = false; $('#create-panel').scrollIntoView({behavior:'smooth',block:'start'}); $('#create-report').elements.title.focus({preventScroll:true});
     window.ReportMap?.open();
   }
@@ -281,20 +319,40 @@
     try { localStorage.setItem('greenReportLanguage',language);localStorage.setItem('greenKurdistanLanguage',language); } catch {}
     translate();
   });
-  $('#account-open').addEventListener('click',()=> { pendingCreate = false; $('#auth-dialog').showModal(); });
+  $('#account-open').addEventListener('click',()=>openAuth('login'));
+  $('#account-register').addEventListener('click',()=>openAuth('register'));
+  document.querySelectorAll('#auth-dialog [role=tab]').forEach(tab=>tab.addEventListener('click',()=>setAuthMode(tab.dataset.mode)));
+  $('#auth-switch').addEventListener('click',()=> { setAuthMode(authMode === 'register' ? 'login' : 'register'); $('#auth-form').elements.username.focus(); });
+  $('#auth-form').elements.password.addEventListener('input',updateMeter);
+  $('#toggle-password').addEventListener('click',()=> {
+    const input = $('#auth-form').elements.password, show = input.type === 'password';
+    input.type = show ? 'text' : 'password'; $('#toggle-password').setAttribute('aria-pressed',String(show));
+    setText('#toggle-password', show ? 'hidePassword' : 'showPassword');
+  });
+  $('#my-reports').addEventListener('click',()=> {
+    scope = 'mine'; page = 1; $('#filters').reset(); updateAccount(); refresh();
+    $('.rr-tabs').scrollIntoView({behavior:'smooth',block:'start'});
+  });
   $('#new-report').addEventListener('click',openCreate);
   $('#close-create').addEventListener('click',()=> { $('#create-panel').hidden = true; $('#new-report').focus(); });
   document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.close).close()));
   $('#report-dialog').addEventListener('close',()=> { ++detailSequence; selectedReport = null; $('#report-detail').replaceChildren(); });
-  $('#auth-dialog').addEventListener('close',()=> { $('#auth-form').elements.password.value = ''; message('#auth-message',null); });
+  $('#auth-dialog').addEventListener('close',()=> {
+    const input = $('#auth-form').elements.password; input.value = ''; input.type = 'password';
+    $('#toggle-password').setAttribute('aria-pressed','false'); setText('#toggle-password','showPassword');
+    message('#auth-message',null); updateMeter();
+  });
   $('#auth-form').addEventListener('submit',async event=> {
     event.preventDefault(); const form = event.currentTarget;
-    const action = event.submitter?.value || 'login';
+    // Enter submits with the first (possibly hidden) button, so trust only a visible submitter.
+    const action = event.submitter && !event.submitter.hidden ? event.submitter.value : authMode;
     if (action === 'register' && form.elements.password.value.length < 12) { message('#auth-message','password_short'); return; }
     const buttons = form.querySelectorAll('button'); buttons.forEach(button=> { button.disabled = true; }); message('#auth-message','loading');
     try {
       const result = await api(`/api/${action}`,'POST',{username:form.elements.username.value,password:form.elements.password.value});
-      user = result.user; updateAccount(); $('#auth-dialog').close(); await refresh(); if (pendingCreate) { pendingCreate = false; openCreate(); }
+      user = result.user; updateAccount(); $('#auth-dialog').close();
+      $('#account-card').classList.remove('rr-flash'); void $('#account-card').offsetWidth; $('#account-card').classList.add('rr-flash');
+      await refresh(); if (pendingCreate) { pendingCreate = false; openCreate(); }
     } catch (error) { errorMessage('#auth-message',error); }
     finally { buttons.forEach(button=> { button.disabled = false; }); }
   });
