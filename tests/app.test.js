@@ -46,15 +46,19 @@ test('the sorting game keeps a separate bin for metal', () => {
   const app = boot();
   assert.equal(app.run('gameItems.find(item => item.name === "Metal can").bin'), 'metal');
 });
-test('quiz advances after wrong answers and rapid clicks schedule only one advance', () => {
+test('quiz waits for Next after an answer, counts rapid clicks once and finishes with a score', () => {
   const app = boot({}, ['#quiz-options', '#quiz-progress', '#quiz-question', '#quiz-feedback']);
   const button = { dataset: { answer: '0' }, addEventListener(type, fn) { this.click = fn; } };
   app.groups.set('#quiz-options button', [button]);
   app.run('renderQuiz()');
   button.click(); button.click();
-  assert.equal(app.timers.length, 1);
-  app.timers[0]();
+  assert.equal(app.timers.length, 0);
+  assert.equal(app.run('quizScore'), 0);
+  assert.match(app.nodes.get('#quiz-feedback').textContent, /answer is/);
+  app.run('nextQuestion()');
   assert.equal(app.run('questionIndex'), 1);
+  app.run('questionIndex = quizQuestions.length - 1; nextQuestion()');
+  assert.equal(app.run('questionIndex'), app.run('quizQuestions.length - 1'));
 });
 test('weather and current AQI use separate endpoints and missing AQI stays unavailable', async () => {
   const urls = [];

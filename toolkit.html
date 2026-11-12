@@ -1,4 +1,76 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Eco Toolkit | Green Kurdistan</title><meta name="description" content="A carbon calculator and a quick eco quiz to understand your impact and make greener choices."><link rel="canonical" href="https://greenkurdistan.dev/toolkit.html"><meta property="og:type" content="website"><meta property="og:site_name" content="Green Kurdistan"><meta property="og:title" content="Eco Toolkit | Green Kurdistan"><meta property="og:description" content="A carbon calculator and a quick eco quiz to understand your impact and make greener choices."><meta property="og:url" content="https://greenkurdistan.dev/toolkit.html"><meta property="og:image" content="https://greenkurdistan.dev/icon.png"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="css/style.css"><link rel="icon" href="icon.svg" type="image/svg+xml"><meta name="theme-color" content="#183e30"><link rel="stylesheet" href="css/languages.css"><link rel="stylesheet" href="css/theme.css"><script src="js/vendor/kurdistan-cities.js" defer></script><script src="js/report-translations.js" defer></script><script src="js/site-translations.js" defer></script><script src="js/site-i18n.js" defer></script><script src="js/site-runtime.js" defer></script><script src="js/app.js" defer></script></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Eco Toolkit | Green Kurdistan</title><meta name="description" content="A carbon calculator and a quick eco quiz to understand your impact and make greener choices."><link rel="canonical" href="https://greenkurdistan.dev/toolkit.html"><meta property="og:type" content="website"><meta property="og:site_name" content="Green Kurdistan"><meta property="og:title" content="Eco Toolkit | Green Kurdistan"><meta property="og:description" content="A carbon calculator and a quick eco quiz to understand your impact and make greener choices."><meta property="og:url" content="https://greenkurdistan.dev/toolkit.html"><meta property="og:image" content="https://greenkurdistan.dev/icon.png"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="css/style.css"><link rel="icon" href="icon.svg" type="image/svg+xml"><meta name="theme-color" content="#183e30"><link rel="stylesheet" href="css/languages.css"><link rel="stylesheet" href="css/theme.css"><link rel="stylesheet" href="css/motion.css"><link rel="stylesheet" href="css/toolkit.css"><script src="js/vendor/kurdistan-cities.js" defer></script><script src="js/report-translations.js" defer></script><script src="js/site-translations.js" defer></script><script src="js/site-i18n.js" defer></script><script src="js/site-runtime.js" defer></script><script src="js/app.js" defer></script></head>
 <body><a class="skip-link" href="#main-content">Skip to content</a><div class="page-glow"></div><header class="site-header"><a class="brand" href="index.html"><img class="brand-logo" src="img/kurdistan-flag.svg" width="48" height="32" alt="Kurdistan flag"><span><strong>Green</strong> Kurdistan <small>ژینگەی کوردستان</small></span></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="weather.html">Weather</a><a href="climate.html">Climate</a><a href="actions.html">Take action</a><a class="active" href="toolkit.html">Toolkit</a><a href="impact.html">Impact Lab</a><a href="reports.html">Report &amp; Resolve</a></nav><label class="site-language"><span data-t="language">Language</span><select id="language" aria-label="Language" data-site-skip><option value="en">English</option><option value="ku">کوردی</option><option value="ar">العربية</option></select></label><button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle dark mode">☾</button></header>
-<main id="main-content"><section class="section-shell page-heading"><p class="eyebrow">Your impact toolkit</p><h1>Learn, calculate,<br><em>act.</em></h1><p>Use these simple tools to understand your impact and make more sustainable choices.</p></section><section class="section-shell"><div class="tools-grid toolkit-grid"><article class="tool-card glass-card calculator"><div class="tool-heading"><span class="tool-icon purple"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/></svg></span><div><h3>Carbon calculator</h3><p>Travel, energy and everyday choices.</p></div></div><label>Car journeys this week <input id="car-input" type="number" min="0" value="3"></label><label>Bus journeys this week <input id="bus-input" type="number" min="0" value="2"></label><label>Electricity units this week <input id="electricity-input" type="number" min="0" value="12"></label><label>Plastic items used this week <input id="plastic-input" type="number" min="0" value="5"></label><p class="card-muted">Enter verified emission factors from your chosen source. No default emissions or tree-offset claims are assumed.</p><label>Car factor (kg CO₂ per journey)<input id="factor-car" type="number" min="0" step="any"></label><label>Bus factor (kg CO₂ per journey)<input id="factor-bus" type="number" min="0" step="any"></label><label>Electricity factor (kg CO₂ per kWh)<input id="factor-electricity" type="number" min="0" step="any"></label><label>Plastic factor (kg CO₂ per item)<input id="factor-plastic" type="number" min="0" step="any"></label><label>Factor source or reference<input id="factor-source" type="text" maxlength="300"></label><div class="carbon-result"><strong id="carbon-value">--</strong><span>kg CO₂ / week<br><small>Calculated only from your inputs.</small></span></div><p id="carbon-message" class="form-message" role="status"></p><button class="button button-small" id="calculate-button" type="button">Calculate impact</button></article><article class="tool-card glass-card quiz"><div class="tool-heading"><span class="tool-icon yellow"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 5 2c-1 1-2 1-2 3m0 3h.01"/></svg></span><div><h3>Eco quiz</h3><p id="quiz-progress">Question 1 of 3</p></div></div><h4 id="quiz-question">Which action saves the most water at home?</h4><div class="quiz-options" id="quiz-options"></div><p class="quiz-feedback" id="quiz-feedback"></p></article></div></section></main><footer class="site-footer section-shell"><div class="brand"><img class="brand-logo" src="img/kurdistan-flag.svg" width="48" height="32" alt="Kurdistan flag"><span><strong>Green</strong> Kurdistan <small>ژینگەی کوردستان</small></span></div><p>Small changes, shared impact.</p><span class="footer-line">© <span class="footer-year">2026</span> · <span>Better choices, brighter days.</span></span></footer></body></html>
+<main id="main-content" class="toolkit-page">
+    <section class="section-shell page-heading"><p class="eyebrow">Your impact toolkit</p><h1>Learn, calculate,<br><em>act.</em></h1><p>Use these simple tools to understand your impact and make more sustainable choices.</p></section>
+    <section class="section-shell">
+      <article class="glass-card calc" aria-labelledby="calc-title">
+        <div class="calc-head"><span class="tool-icon purple"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></span><div><h2 id="calc-title">Your weekly carbon footprint</h2><p>Answer four quick questions. Your result updates as you type.</p></div></div>
+        <div class="calc-body">
+          <div class="calc-questions">
+            <div class="calc-row" data-kind="car">
+              <span class="calc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 16V11l2-5h10l2 5v5M3 16h18v3H3zM7 11h10"/><circle cx="7.5" cy="16" r="1.5"/><circle cx="16.5" cy="16" r="1.5"/></svg></span>
+              <div class="calc-text"><label for="car-input">How far do you go by car each week?</label><p>Kilometres as a driver or passenger.</p></div>
+              <div class="stepper"><button type="button" class="step" data-target="car-input" data-step="-10" aria-label="Decrease">−</button><input id="car-input" type="number" min="0" step="1" value="50" inputmode="decimal"><span class="unit">km</span><button type="button" class="step" data-target="car-input" data-step="10" aria-label="Increase">+</button></div>
+            </div>
+            <div class="calc-row" data-kind="bus">
+              <span class="calc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M8 21v-3M16 21v-3"/><circle cx="8.5" cy="14.5" r="1"/><circle cx="15.5" cy="14.5" r="1"/></svg></span>
+              <div class="calc-text"><label for="bus-input">How far do you go by bus each week?</label><p>Kilometres on buses and minibuses.</p></div>
+              <div class="stepper"><button type="button" class="step" data-target="bus-input" data-step="-10" aria-label="Decrease">−</button><input id="bus-input" type="number" min="0" step="1" value="20" inputmode="decimal"><span class="unit">km</span><button type="button" class="step" data-target="bus-input" data-step="10" aria-label="Increase">+</button></div>
+            </div>
+            <div class="calc-row" data-kind="electricity">
+              <span class="calc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+              <div class="calc-text"><label for="electricity-input">How much electricity does your home use each week?</label><p>In kWh. Tip: divide your monthly bill's kWh by 4.</p></div>
+              <div class="stepper"><button type="button" class="step" data-target="electricity-input" data-step="-10" aria-label="Decrease">−</button><input id="electricity-input" type="number" min="0" step="1" value="60" inputmode="decimal"><span class="unit">kWh</span><button type="button" class="step" data-target="electricity-input" data-step="10" aria-label="Increase">+</button></div>
+            </div>
+            <div class="calc-row" data-kind="plastic">
+              <span class="calc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 2h4v3l2 3v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V8l2-3z"/><path d="M8 12h8"/></svg></span>
+              <div class="calc-text"><label for="plastic-input">How much plastic do you throw away each week?</label><p>In kilograms: bottles, bags and packaging.</p></div>
+              <div class="stepper"><button type="button" class="step" data-target="plastic-input" data-step="-0.1" aria-label="Decrease">−</button><input id="plastic-input" type="number" min="0" step="0.1" value="0.5" inputmode="decimal"><span class="unit">kg</span><button type="button" class="step" data-target="plastic-input" data-step="0.1" aria-label="Increase">+</button></div>
+            </div>
+          </div>
+          <aside class="calc-result" aria-live="polite">
+            <p class="calc-result-label">Your footprint</p>
+            <div class="carbon-result"><strong id="carbon-value">--</strong><span>kg CO₂ per week</span></div>
+            <p class="calc-year" id="carbon-year"></p>
+            <ul class="calc-bars">
+              <li data-kind="car"><span class="calc-bar-label"><span>Car</span><b id="share-car">0%</b></span><span class="calc-bar"><i id="bar-car"></i></span></li>
+              <li data-kind="bus"><span class="calc-bar-label"><span>Bus</span><b id="share-bus">0%</b></span><span class="calc-bar"><i id="bar-bus"></i></span></li>
+              <li data-kind="electricity"><span class="calc-bar-label"><span>Electricity</span><b id="share-electricity">0%</b></span><span class="calc-bar"><i id="bar-electricity"></i></span></li>
+              <li data-kind="plastic"><span class="calc-bar-label"><span>Plastic</span><b id="share-plastic">0%</b></span><span class="calc-bar"><i id="bar-plastic"></i></span></li>
+            </ul>
+            <p class="calc-tip" id="carbon-tip"></p>
+            <p id="carbon-message" class="form-message" role="status"></p>
+          </aside>
+        </div>
+        <details class="calc-sources">
+          <summary>Where do these numbers come from?</summary>
+          <p>We use published averages. You can change them if you have numbers for your own car or home.</p>
+          <div class="calc-factors">
+            <label>Car (kg CO₂e per km)<input id="factor-car" type="number" min="0" step="any" value="0.16725"></label>
+            <label>Bus (kg CO₂e per passenger-km)<input id="factor-bus" type="number" min="0" step="any" value="0.12525"></label>
+            <label>Electricity (kg CO₂e per kWh)<input id="factor-electricity" type="number" min="0" step="any" value="0.6831"></label>
+            <label>Plastic (kg CO₂e per kg)<input id="factor-plastic" type="number" min="0" step="any" value="3.17250"></label>
+            <label class="calc-factor-source">Source<input id="factor-source" type="text" maxlength="300" value="UK Government GHG conversion factors 2025; Ember 2024 via Our World in Data"></label>
+          </div>
+          <ul class="calc-links">
+            <li><a href="https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2025" target="_blank" rel="noopener noreferrer">UK Government greenhouse gas conversion factors 2025 (car, bus, plastic)</a></li>
+            <li><a href="https://ourworldindata.org/grapher/carbon-intensity-electricity?tab=table&amp;country=~IRQ" target="_blank" rel="noopener noreferrer">Ember 2024, via Our World in Data (Iraq electricity grid)</a></li>
+          </ul>
+          <p class="card-muted">These are averages, so your real footprint may be higher or lower.</p>
+        </details>
+      </article>
+    </section>
+    <section class="section-shell">
+      <article class="glass-card quiz" aria-labelledby="quiz-title">
+        <div class="quiz-top"><div class="tool-heading"><span class="tool-icon yellow"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg></span><div><h2 id="quiz-title">Eco quiz</h2><p id="quiz-progress">Question 1 of 5</p></div></div><span class="quiz-score" id="quiz-score">0</span></div>
+        <div class="quiz-track" aria-hidden="true"><i id="quiz-bar"></i></div>
+        <div id="quiz-play">
+          <h3 id="quiz-question">Which action saves the most water at home?</h3>
+          <div class="quiz-options" id="quiz-options"></div>
+          <div class="quiz-answer" id="quiz-answer" hidden><p class="quiz-feedback" id="quiz-feedback" role="status"></p><p class="quiz-explain" id="quiz-explain"></p><button type="button" class="button" id="quiz-next">Next question</button></div>
+        </div>
+        <div class="quiz-done" id="quiz-done" hidden><p class="quiz-final" id="quiz-final"></p><p id="quiz-final-note"></p><button type="button" class="button" id="quiz-restart">Play again</button></div>
+      </article>
+    </section>
+  </main><footer class="site-footer section-shell"><div class="brand"><img class="brand-logo" src="img/kurdistan-flag.svg" width="48" height="32" alt="Kurdistan flag"><span><strong>Green</strong> Kurdistan <small>ژینگەی کوردستان</small></span></div><p>Small changes, shared impact.</p><span class="footer-line">© <span class="footer-year">2026</span> · <span>Better choices, brighter days.</span></span></footer></body></html>

@@ -138,29 +138,53 @@ if (challengeButtons.length) {
 }
 
 const nonnegativeNumber = value => Number.isFinite(Number(value)) ? Math.max(0, Number(value)) : 0;
+const carbonKinds = ['car','bus','electricity','plastic'];
+const carbonTips = {
+  car: 'Driving is your biggest source. Sharing rides or taking the bus for one trip a week makes a real difference.',
+  bus: 'The bus is your biggest source, and it is already one of the cleaner ways to travel. Walking short trips helps even more.',
+  electricity: 'Electricity is your biggest source. Switching off air conditioning and lights in empty rooms is the quickest win.',
+  plastic: 'Plastic is your biggest source. A refillable water bottle and a reusable bag cut it quickly.'
+};
 const calculateCarbon = () => {
-  const carInput = $('#car-input');
-  const busInput = $('#bus-input');
-  const electricityInput = $('#electricity-input');
-  const plasticInput = $('#plastic-input');
-  if (!carInput || !busInput) return;
-
-  const factors = ['car','bus','electricity','plastic'].map(key => $('#factor-' + key)?.value);
+  const inputs = carbonKinds.map(kind => $('#' + kind + '-input'));
+  if (!inputs[0] || !inputs[1]) return;
+  const factors = carbonKinds.map(kind => $('#factor-' + kind)?.value);
   if (factors.some(value => value === undefined || value === '' || !Number.isFinite(Number(value)) || Number(value) < 0) || !$('#factor-source')?.value.trim()) {
     setText('#carbon-value', '--');
-    setText('#carbon-message', 'Enter all four emission factors and their source to calculate your result.'); return;
+    setText('#carbon-year', '');
+    setText('#carbon-tip', '');
+    setText('#carbon-message', 'Fill in every number to see your result.'); return;
   }
-  const carbon = [carInput,busInput,electricityInput,plasticInput].reduce((sum,input,index) => sum + nonnegativeNumber(input?.value) * Number(factors[index]),0);
+  const parts = inputs.map((input, index) => nonnegativeNumber(input?.value) * Number(factors[index]));
+  const carbon = parts.reduce((sum, part) => sum + part, 0);
   setText('#carbon-value', carbon.toFixed(2));
-  setText('#carbon-message', 'Calculated using your emission factors.');
+  setText('#carbon-year', `About ${Math.round(carbon * 52)} kg per year`);
+  const top = carbon > 0 ? carbonKinds[parts.indexOf(Math.max(...parts))] : null;
+  carbonKinds.forEach((kind, index) => {
+    const share = carbon > 0 ? Math.round(parts[index] / carbon * 100) : 0;
+    setText('#share-' + kind, `${share}%`);
+    const bar = $('#bar-' + kind);
+    if (bar) bar.style.width = `${share}%`;
+    document.querySelector?.(`.calc-bars li[data-kind="${kind}"]`)?.classList.toggle('top', kind === top);
+  });
+  setText('#carbon-tip', top ? carbonTips[top] : '');
+  setText('#carbon-message', 'Based on published averages.');
 };
-if ($('#calculate-button')) {
-  $('#calculate-button').addEventListener('click', calculateCarbon);
-  $('#car-input')?.addEventListener('input', calculateCarbon);
-  $('#bus-input')?.addEventListener('input', calculateCarbon);
-  $('#electricity-input')?.addEventListener('input', calculateCarbon);
-  $('#plastic-input')?.addEventListener('input', calculateCarbon);
-  ['car','bus','electricity','plastic','source'].forEach(key => $('#factor-' + key)?.addEventListener('input', calculateCarbon));
+if ($('#car-input')) {
+  carbonKinds.forEach(kind => {
+    $('#' + kind + '-input')?.addEventListener('input', calculateCarbon);
+    $('#factor-' + kind)?.addEventListener('input', calculateCarbon);
+  });
+  $('#factor-source')?.addEventListener('input', calculateCarbon);
+  $('#calculate-button')?.addEventListener('click', calculateCarbon);
+  document.querySelectorAll('.step').forEach(button => button.addEventListener('click', () => {
+    const input = document.getElementById(button.dataset.target);
+    if (!input) return;
+    const step = Number(button.dataset.step);
+    const next = Math.max(0, nonnegativeNumber(input.value) + step);
+    input.value = String(Math.round(next * 10) / 10);
+    calculateCarbon();
+  }));
   calculateCarbon();
 }
 
@@ -168,27 +192,58 @@ if ($('#calculate-button')) {
 document.querySelectorAll('.footer-year').forEach(element => { element.textContent = String(new Date().getFullYear()); });
 
 const quizQuestions = [
-  { question: 'Which action saves the most water at home?', answers: ['Boiling only the water you need', 'Taking shorter showers', 'Washing one item at a time'], correct: 1 },
-  { question: 'Which item belongs in a paper recycling bin?', answers: ['A clean newspaper', 'A used battery', 'A food-covered box'], correct: 0 },
-  { question: 'Which is a renewable energy source?', answers: ['Coal', 'Natural gas', 'Solar power'], correct: 2 }
+  { question: 'Which action saves the most water at home?', answers: ['Boiling only the water you need', 'Taking shorter showers', 'Washing one item at a time'], correct: 1, explain: 'A shorter shower saves many litres every day. Boiling less water mainly saves energy, not water.' },
+  { question: 'Which item belongs in a paper recycling bin?', answers: ['A clean newspaper', 'A used battery', 'A food-covered box'], correct: 0, explain: 'Clean paper can be recycled. Batteries need special collection, and food ruins paper recycling.' },
+  { question: 'Which is a renewable energy source?', answers: ['Coal', 'Natural gas', 'Solar power'], correct: 2, explain: 'Solar power comes from the sun and will not run out. Coal and gas are fossil fuels.' },
+  { question: 'Which light bulb uses the least electricity for the same light?', answers: ['Old-style (incandescent) bulb', 'Halogen bulb', 'LED bulb'], correct: 2, explain: 'LED bulbs use far less electricity than old-style bulbs for the same brightness, and last much longer.' },
+  { question: 'Which way of getting to class usually produces the least CO₂?', answers: ['Driving alone', 'Taking the bus', 'Walking or cycling'], correct: 2, explain: 'Walking and cycling produce almost no emissions. The bus is the next best choice.' }
 ];
-let questionIndex = 0;
+let questionIndex = 0, quizScore = 0;
 function renderQuiz() {
   const quiz = quizQuestions[questionIndex];
   let answered = false;
-  $('#quiz-progress').textContent = `Question ${questionIndex + 1} of ${quizQuestions.length}`;
-  $('#quiz-question').textContent = quiz.question;
-  $('#quiz-feedback').textContent = '';
-  $('#quiz-options').innerHTML = quiz.answers.map((answer, i) => `<button data-answer="${i}">${answer}</button>`).join('');
+  setText('#quiz-progress', `Question ${questionIndex + 1} of ${quizQuestions.length}`);
+  setText('#quiz-question', quiz.question);
+  setText('#quiz-feedback', '');
+  setText('#quiz-explain', '');
+  setText('#quiz-score', String(quizScore));
+  if ($('#quiz-answer')) $('#quiz-answer').hidden = true;
+  if ($('#quiz-play')) $('#quiz-play').hidden = false;
+  if ($('#quiz-done')) $('#quiz-done').hidden = true;
+  if ($('#quiz-bar')) $('#quiz-bar').style.width = `${questionIndex / quizQuestions.length * 100}%`;
+  setText('#quiz-next', questionIndex === quizQuestions.length - 1 ? 'See my score' : 'Next question');
+  $('#quiz-options').replaceChildren?.(...quiz.answers.map((answer, i) => {
+    const option = document.createElement('button');
+    option.type = 'button'; option.dataset.answer = String(i); option.textContent = answer;
+    return option;
+  }));
   document.querySelectorAll('#quiz-options button').forEach(button => button.addEventListener('click', () => {
     if (answered) return;
     answered = true;
-    document.querySelectorAll('#quiz-options button').forEach(option => { option.disabled = true; });
     const correct = Number(button.dataset.answer) === quiz.correct;
-    $('#quiz-feedback').textContent = correct ? 'Correct! Great eco knowledge 🌿' : `Not quite — the answer is “${quiz.answers[quiz.correct]}”.`;
-    setTimeout(() => { questionIndex = (questionIndex + 1) % quizQuestions.length; renderQuiz(); }, 900);
+    if (correct) quizScore++;
+    document.querySelectorAll('#quiz-options button').forEach(option => {
+      option.disabled = true;
+      if (Number(option.dataset.answer) === quiz.correct) option.classList?.add('is-right');
+    });
+    if (!correct) button.classList?.add('is-wrong');
+    setText('#quiz-feedback', correct ? 'Correct!' : `Not quite — the answer is “${quiz.answers[quiz.correct]}”.`);
+    setText('#quiz-explain', quiz.explain);
+    setText('#quiz-score', String(quizScore));
+    if ($('#quiz-bar')) $('#quiz-bar').style.width = `${(questionIndex + 1) / quizQuestions.length * 100}%`;
+    if ($('#quiz-answer')) { $('#quiz-answer').hidden = false; $('#quiz-next')?.focus?.(); }
   }));
 }
+function nextQuestion() {
+  if (questionIndex < quizQuestions.length - 1) { questionIndex++; renderQuiz(); return; }
+  if ($('#quiz-play')) $('#quiz-play').hidden = true;
+  if ($('#quiz-done')) $('#quiz-done').hidden = false;
+  setText('#quiz-progress', 'Quiz complete');
+  setText('#quiz-final', `You scored ${quizScore} out of ${quizQuestions.length}`);
+  setText('#quiz-final-note', quizScore === quizQuestions.length ? 'Excellent! You really know your stuff.' : 'Good effort. Try again to get them all.');
+}
+$('#quiz-next')?.addEventListener('click', nextQuestion);
+$('#quiz-restart')?.addEventListener('click', () => { questionIndex = 0; quizScore = 0; renderQuiz(); });
 if ($('#quiz-options')) renderQuiz();
 
 const normalizeImpactState = (state = {}) => ({
@@ -416,3 +471,29 @@ loadHomeWeather();
 loadHomeTrend();
 
 window.addEventListener?.('site:language', loadHomeWeather);
+
+// Smooth scroll reveals: content below the fold fades up as it comes into view.
+// Skipped when the visitor prefers reduced motion or the browser lacks IntersectionObserver.
+(() => {
+  if (typeof IntersectionObserver === 'undefined' || !document.querySelectorAll) return;
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  const selectors = ['.home-facts-inner > div', '.home-paths-head', '.home-path', '.home-report-card', '.home-steps li', '.home-more-section h2', '.home-more', '.section-heading', '.glass-card', '.rr-journey article', '.rr-stat', '.action-grid > *', '.history-coverage > *', '.site-footer > *'];
+  const seen = new Set();
+  const items = [];
+  for (const selector of selectors) document.querySelectorAll(selector).forEach(element => {
+    if (seen.has(element) || element.closest('.reveal') || element.closest('.home-hero')) return;
+    if (element.getBoundingClientRect().top < window.innerHeight * 0.92) return;
+    seen.add(element); items.push(element);
+  });
+  const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('is-visible');
+    observer.unobserve(entry.target);
+  }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  items.forEach(element => {
+    const siblings = [...(element.parentElement?.children || [])].filter(node => seen.has(node));
+    element.style.setProperty('--reveal-delay', `${Math.min(siblings.indexOf(element), 4) * 0.08}s`);
+    element.classList.add('reveal');
+    observer.observe(element);
+  });
+})();

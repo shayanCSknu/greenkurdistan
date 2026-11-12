@@ -1,0 +1,135 @@
+/* Motion: entrances, scroll reveals, hovers and page transitions.
+   Everything lives inside no-preference, so visitors who ask their device for less motion see a still site. */
+@media (prefers-reduced-motion:no-preference) {
+  /* Smooth fade between pages (Chrome, Edge, Safari 18+; other browsers just navigate). */
+  @view-transition {
+    navigation:auto
+  }
+  ::view-transition-old(root),::view-transition-new(root) {
+    animation-duration:.32s;
+    animation-timing-function:cubic-bezier(.2,.7,.2,1)
+  }
+
+  @keyframes gk-rise {
+    from { opacity:0; transform:translateY(26px) }
+    to { opacity:1; transform:none }
+  }
+  @keyframes gk-float-in {
+    from { opacity:0; transform:translateY(40px) scale(.96) }
+    to { opacity:1; transform:none }
+  }
+  @keyframes gk-sunrise {
+    from { transform:translateY(90px); opacity:.2 }
+    to { transform:none; opacity:1 }
+  }
+  @keyframes gk-hills {
+    from { transform:translateY(40px) }
+    to { transform:none }
+  }
+  @keyframes gk-pulse {
+    0% { box-shadow:0 0 0 0 rgba(43,155,71,.55) }
+    70% { box-shadow:0 0 0 9px rgba(43,155,71,0) }
+    100% { box-shadow:0 0 0 0 rgba(43,155,71,0) }
+  }
+  @keyframes gk-spin-slow {
+    to { transform:rotate(360deg) }
+  }
+  @keyframes gk-draw {
+    from { stroke-dashoffset:1 }
+    to { stroke-dashoffset:0 }
+  }
+
+  /* Page openings */
+  .home-hero-copy>*,.page-heading>* {
+    animation:gk-rise .8s cubic-bezier(.2,.7,.2,1) both
+  }
+  .home-hero-copy>:nth-child(2),.page-heading>:nth-child(2) { animation-delay:.08s }
+  .home-hero-copy>:nth-child(3),.page-heading>:nth-child(3) { animation-delay:.16s }
+  .home-hero-copy>:nth-child(4),.page-heading>:nth-child(4) { animation-delay:.24s }
+  .home-live {
+    animation:gk-float-in 1s .3s cubic-bezier(.2,.7,.2,1) both
+  }
+  .home-landscape circle {
+    transform-box:fill-box;
+    animation:gk-sunrise 1.8s .15s cubic-bezier(.2,.7,.2,1) both
+  }
+  .home-landscape path {
+    animation:gk-hills 1.4s cubic-bezier(.2,.7,.2,1) both
+  }
+  .home-live-badge i {
+    animation:gk-pulse 2.2s infinite
+  }
+  .home-icon {
+    display:inline-block;
+    animation:gk-spin-slow 24s linear infinite
+  }
+
+  /* Scroll reveals (app.js adds .reveal only to content below the fold) */
+  .reveal {
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .7s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0s),transform .7s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0s)
+  }
+  .reveal.is-visible {
+    opacity:1;
+    transform:none
+  }
+  .home-spark polyline {
+    stroke-dasharray:1;
+    stroke-dashoffset:0
+  }
+  .reveal .home-spark polyline {
+    stroke-dashoffset:1
+  }
+  .reveal.is-visible .home-spark polyline {
+    animation:gk-draw 1.6s .3s cubic-bezier(.4,0,.2,1) both
+  }
+
+  /* Hovers and presses */
+  .button,.outline-button,.home-cta,.home-ghost,.home-live-link,.step {
+    transition:transform .18s cubic-bezier(.2,.7,.2,1),box-shadow .18s,background-color .18s,color .18s
+  }
+  .button:active,.outline-button:active,.home-cta:active,.home-ghost:active,.step:active {
+    transform:scale(.96)
+  }
+  .home-cta:hover {
+    box-shadow:0 10px 24px rgba(242,182,50,.35)
+  }
+  .home-cta .flip,.home-live-link .flip,.home-path-link {
+    transition:transform .2s
+  }
+  .home-cta:hover .flip,.home-live-link:hover .flip {
+    transform:translateX(4px)
+  }
+  html[dir=rtl] .home-cta:hover .flip,html[dir=rtl] .home-live-link:hover .flip {
+    transform:scaleX(-1) translateX(4px)
+  }
+  .glass-card,.home-path,.home-more {
+    transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s
+  }
+  .home-path:hover,.home-more:hover,a.glass-card:hover {
+    transform:translateY(-6px);
+    box-shadow:0 22px 44px rgba(18,51,42,.14)
+  }
+  .home-path:hover .home-path-link,.home-more:hover .home-path-link {
+    transform:translateX(4px)
+  }
+  html[dir=rtl] .home-path:hover .home-path-link,html[dir=rtl] .home-more:hover .home-path-link {
+    transform:translateX(-4px)
+  }
+  .home-more-icon {
+    transition:transform .3s cubic-bezier(.2,.7,.2,1)
+  }
+  .home-more:hover .home-more-icon {
+    transform:rotate(-6deg) scale(1.06)
+  }
+  .main-nav a.active:after {
+    animation:gk-rise .4s both
+  }
+  .main-nav a {
+    transition:color .18s
+  }
+  .quiz-answer:not([hidden]),.quiz-done:not([hidden]) {
+    animation:gk-rise .45s cubic-bezier(.2,.7,.2,1) both
+  }
+}

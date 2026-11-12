@@ -141,10 +141,10 @@ test('all interactive pages initialize; calculators explain missing inputs and r
   for (const page of ['index.html','weather.html','actions.html','toolkit.html','impact.html']) {
     const ui=await browser(t,app,page,{root:'dist'});
     if(page==='toolkit.html') {
-      assert.match(ui.$('#carbon-message').textContent,/emission factors/);
+      assert.match(ui.$('#carbon-message').textContent,/published averages/);assert.notEqual(ui.$('#carbon-value').textContent,'--');assert.match(ui.$('#carbon-year').textContent,/per year/);
       for(const key of ['car','bus','electricity','plastic'])ui.$('#factor-'+key).value='1';
       ui.$('#factor-source').value='Test fixture';ui.$('#factor-source').dispatchEvent(new ui.w.Event('input'));
-      assert.equal(ui.$('#carbon-value').textContent,'22.00');
+      assert.equal(ui.$('#carbon-value').textContent,'130.50');
       assert.ok(ui.$('#quiz-options button'));
       assert.equal(ui.$('#recycle-search'),null);
       assert.equal(ui.$('.recycle'),null);
