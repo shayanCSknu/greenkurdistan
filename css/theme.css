@@ -174,3 +174,79 @@ html[dir=rtl] .site-header .brand {
 .eyebrow {
   font-size:11px
 }
+
+/* Inner pages: forest hero band to match the home page */
+body {
+  overflow-x:clip
+}
+.page-heading {
+  position:relative;
+  isolation:isolate;
+  padding-block:64px 168px;
+  margin-bottom:8px;
+  /* Full-width forest fill without widening the page. */
+  border-image:linear-gradient(var(--bar) 0 0) fill 0/0/0 100vmax;
+  color:var(--bar-ink)
+}
+.page-heading:before,.page-heading:after {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  left:50%;
+  bottom:0;
+  width:100vw;
+  transform:translateX(-50%);
+  pointer-events:none
+}
+/* Rolling hills with a small sun, same colours as the home landscape. */
+.page-heading:before {
+  height:150px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 150' preserveAspectRatio='none'%3E%3Ccircle cx='1235' cy='46' r='26' fill='%23f2b632'/%3E%3Cpath d='M0 90 160 40 300 85 470 20 620 80 780 45 940 95 1100 35 1260 85 1440 50V150H0Z' fill='%231d4a3a'/%3E%3Cpath d='M470 20 495 42 478 40 462 54 450 36Z M1100 35 1124 56 1108 54 1094 66 1084 50Z' fill='%23f4f1e6' opacity='.85'/%3E%3Cpath d='M0 115C200 70 360 110 560 95 760 80 900 120 1100 100 1260 85 1360 105 1440 95V150H0Z' fill='%232a6149'/%3E%3C/svg%3E") bottom/100% 100% no-repeat
+}
+/* The page colour rises out of the band as a soft wave. */
+.page-heading:after {
+  height:49px;
+  bottom:-3px;
+  background:var(--cream);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 46' preserveAspectRatio='none'%3E%3Cpath d='M0 30C240 0 480 34 720 22 960 10 1200 36 1440 14V46H0Z'/%3E%3C/svg%3E") bottom/100% 100% no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 46' preserveAspectRatio='none'%3E%3Cpath d='M0 30C240 0 480 34 720 22 960 10 1200 36 1440 14V46H0Z'/%3E%3C/svg%3E") bottom/100% 100% no-repeat
+}
+.page-heading .eyebrow {
+  color:var(--gold);
+  font-size:13px;
+  letter-spacing:.14em
+}
+.page-heading h1 {
+  margin:0;
+  font:700 clamp(42px,6vw,84px)/.98 var(--display);
+  letter-spacing:-.035em;
+  color:var(--bar-ink)
+}
+html[dir=rtl] .page-heading h1 {
+  font-family:Vazirmatn,'Segoe UI',Tahoma,Arial,sans-serif;
+  line-height:1.3
+}
+.page-heading h1 em {
+  color:var(--gold)
+}
+.page-heading p:not(.eyebrow) {
+  max-width:560px;
+  margin-top:24px;
+  font-size:18px;
+  line-height:1.55;
+  color:#d5ded4
+}
+.page-heading .button {
+  margin-top:8px;
+  background:var(--gold);
+  border-color:var(--gold);
+  color:#12332a
+}
+@media (max-width:700px) {
+  .page-heading {
+    padding-block:40px 120px
+  }
+  .page-heading:before {
+    height:100px
+  }
+}
