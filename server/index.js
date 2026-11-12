@@ -271,12 +271,12 @@ function createApp({ database, root = resolve(__dirname, '..'), secureCookies = 
       if (!['GET','HEAD'].includes(method)) fail(405,'method_not_allowed');
       const pathname = path === '/' ? '/index.html' : path;
       const allowed = /^\/(?:index|weather|climate|actions|toolkit|impact|reports|404)\.html$/.test(pathname)
-        || /^\/(?:css|js|img)\/[a-zA-Z0-9_./-]+\.(?:css|js|svg|jpg|png|webp)$/.test(pathname)
+        || /^\/(?:css|js|img)\/[a-zA-Z0-9_./-]+\.(?:css|js|svg|jpg|png|webp|woff2)$/.test(pathname)
         || ['/sw.js','/icon.svg','/icon.png','/favicon.ico','/site.webmanifest','/robots.txt'].includes(pathname);
       if (!allowed || pathname.includes('..')) fail(404,'not_found');
       let bytes;
       try { bytes = await readFile(resolve(root, '.' + pathname)); } catch { fail(404,'not_found'); }
-      const mime = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.ico':'image/x-icon','.webmanifest':'application/manifest+json','.txt':'text/plain; charset=utf-8'};
+      const mime = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.woff2':'font/woff2','.ico':'image/x-icon','.webmanifest':'application/manifest+json','.txt':'text/plain; charset=utf-8'};
       res.writeHead(200, { 'Content-Type': mime[extname(pathname)], 'Content-Length':bytes.length, 'Cache-Control':'no-cache' });
       res.end(method === 'HEAD' ? undefined : bytes);
     } catch (error) {

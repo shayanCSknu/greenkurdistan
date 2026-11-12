@@ -362,3 +362,57 @@ if ($('#game-item')) document.querySelectorAll('.bin-options button').forEach(bu
     $('#game-message').textContent = 'Try again — think about the material.';
   }
 }));
+// Home page: live conditions for Erbil in the hero card, plus the five-day strip.
+async function loadHomeWeather() {
+  if (!$('#home-temp')) return;
+  const city = locations.erbil;
+  try {
+    const airRequest = fetchLive(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${city.lat}&longitude=${city.lon}&current=us_aqi&timezone=auto`).then(response => response.ok ? response.json() : null).catch(() => null);
+    const response = await fetchLive(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`);
+    if (!response.ok) throw new Error('Weather unavailable');
+    const data = await response.json(), air = await airRequest, current = data.current || {};
+    if (!Number.isFinite(current.temperature_2m)) throw new Error('Missing weather');
+    const [icon, description] = weatherIcon(current.weather_code);
+    const whole = (value, unit) => Number.isFinite(value) ? `${Math.round(value)}${unit}` : '--';
+    setText('#home-temp', Math.round(current.temperature_2m));
+    setText('#home-icon', icon);
+    setText('#home-desc', description);
+    setText('#home-feels', whole(current.apparent_temperature, '°'));
+    setText('#home-humidity', whole(current.relative_humidity_2m, '%'));
+    setText('#home-wind', whole(current.wind_speed_10m, ' km/h'));
+    const aqi = Number.isFinite(air?.current?.us_aqi) ? Math.max(0, Math.round(air.current.us_aqi)) : null;
+    setText('#home-aqi', aqi ?? '--');
+    setText('#home-aqi-label', aqi === null ? '' : aqi <= 50 ? 'GOOD' : aqi <= 100 ? 'MODERATE' : 'UNHEALTHY');
+    const strip = $('#home-forecast');
+    if (strip && Array.isArray(data.daily?.time)) {
+      strip.replaceChildren(...data.daily.time.map((date, i) => {
+        const cell = document.createElement('span');
+        const part = (tag, value) => { const node = document.createElement(tag); node.textContent = value; return node; };
+        const day = i === 0 ? 'Today' : new Date(`${date}T12:00:00`).toLocaleDateString(window.I18N?.locale || 'en', { weekday: 'short' });
+        cell.append(part('span', day), part('b', whole(data.daily.temperature_2m_max?.[i], '°')), part('span', whole(data.daily.temperature_2m_min?.[i], '°')));
+        return cell;
+      }));
+    }
+  } catch {
+    setText('#home-desc', 'Live data is temporarily unavailable');
+  }
+}
+// Home page: draw the real global temperature series when the climate API is reachable; the sketch stays otherwise.
+async function loadHomeTrend() {
+  const line = $('#home-spark-line');
+  if (!line || !window.GreenRuntime?.apiUrl) return;
+  try {
+    const response = await fetchLive(window.GreenRuntime.apiUrl(`/api/climate/history?dataset=global&start=1900&end=${new Date().getUTCFullYear()}`));
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) return;
+    const rows = ((await response.json()).rows || []).filter(row => typeof row.anomaly === 'number');
+    if (rows.length < 10) return;
+    const values = rows.map(row => row.anomaly), min = Math.min(...values), max = Math.max(...values);
+    line.setAttribute('points', rows.map((row, i) => `${(i / (rows.length - 1) * 300).toFixed(1)},${(90 - (row.anomaly - min) / (max - min || 1) * 84).toFixed(1)}`).join(' '));
+    setText('#home-spark-start', rows[0].time);
+    setText('#home-spark-end', rows.at(-1).time);
+  } catch { /* keep the static sketch */ }
+}
+loadHomeWeather();
+loadHomeTrend();
+
+window.addEventListener?.('site:language', loadHomeWeather);

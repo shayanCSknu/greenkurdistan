@@ -1,0 +1,176 @@
+/* Green Kurdistan — 2026 refresh: forest bar, sun-gold accent, bolder type. Loaded last on every page. */
+/* Self-hosted fonts (SIL Open Font License): Bricolage Grotesque, Inter, Vazirmatn. */
+@font-face {
+  font-family:'Bricolage Grotesque';
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url('fonts/bricolage-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD
+}
+@font-face {
+  font-family:'Bricolage Grotesque';
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url('fonts/bricolage-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF
+}
+@font-face {
+  font-family:'Inter';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('fonts/inter-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD
+}
+@font-face {
+  font-family:'Inter';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('fonts/inter-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF
+}
+@font-face {
+  font-family:'Vazirmatn';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('fonts/vazirmatn-arabic.woff2') format('woff2');
+  unicode-range:U+0600-06FF,U+0750-077F,U+0870-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC
+}
+:root {
+  --display:'Bricolage Grotesque','Segoe UI',Arial,sans-serif;
+  --gold:#f2b632;
+  --bar:#12332a;
+  --bar-soft:#1d4a3a;
+  --bar-line:#3b5e50;
+  --bar-ink:#f4f1e6;
+  --bar-muted:#b9c8bc;
+  --cream:#f4f1e6
+}
+body.dark {
+  --bar:#0e2921;
+  --cream:#14241e
+}
+body {
+  font-family:Inter,'Segoe UI',Arial,sans-serif
+}
+
+/* Type */
+:root h1,:root h2 {
+  font-weight:700;
+  letter-spacing:-.03em
+}
+:root h3 {
+  letter-spacing:-.01em
+}
+h1 em {
+  font-style:normal
+}
+html[dir=rtl] body,html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] h3 {
+  font-family:Vazirmatn,'Segoe UI',Tahoma,Arial,sans-serif
+}
+.flip {
+  display:inline-block
+}
+html[dir=rtl] .flip {
+  transform:scaleX(-1)
+}
+
+/* Header: full-width forest bar */
+.site-header {
+  border-bottom:0;
+  min-height:88px;
+  color:var(--bar-ink)
+}
+/* Paint the bar edge to edge without widening the page. */
+.site-header,.site-footer {
+  background:var(--bar);
+  box-shadow:0 0 0 100vmax var(--bar);
+  clip-path:inset(0 -100vmax)
+}
+.site-header .brand {
+  font-family:var(--display);
+  font-size:19px;
+  letter-spacing:-.01em
+}
+html[dir=rtl] .site-header .brand {
+  font-family:inherit
+}
+.site-header .brand small,.site-footer .brand small {
+  color:var(--bar-muted)
+}
+.site-header .brand-logo,.site-footer .brand-logo {
+  box-shadow:none;
+  border-radius:4px
+}
+.site-header .main-nav a {
+  color:#d5ded4;
+  font-size:14px;
+  font-weight:500
+}
+.site-header .main-nav a.active,.site-header .main-nav a:hover {
+  color:var(--gold)
+}
+.site-header .main-nav a.active:after {
+  background:var(--gold)
+}
+.site-header .site-language {
+  color:var(--bar-muted)
+}
+.site-header .site-language select {
+  min-height:40px;
+  padding-inline:14px;
+  border-radius:999px;
+  border-color:var(--bar-line);
+  background:transparent;
+  color:var(--bar-ink)
+}
+.site-header .site-language select option {
+  color:#14261f;
+  background:#fff
+}
+.site-header .icon-button {
+  border-color:var(--bar-line);
+  color:var(--bar-ink)
+}
+.site-header .icon-button:hover {
+  background:var(--bar-soft)
+}
+.main-nav {
+  scrollbar-color:var(--bar-line) transparent
+}
+.main-nav::-webkit-scrollbar-thumb {
+  background:var(--bar-line)
+}
+
+/* Footer: same forest bar */
+.site-footer {
+  border-top:0;
+  margin-top:56px;
+  padding-block:40px;
+  color:var(--bar-ink)
+}
+.site-footer p,.site-footer .footer-line {
+  font-size:13px;
+  color:var(--bar-muted)
+}
+
+/* Buttons and cards */
+.button,.outline-button {
+  border-radius:999px;
+  padding:14px 24px;
+  font-size:14px
+}
+.button-small,.outline-button {
+  padding:11px 18px;
+  font-size:13px
+}
+.glass-card {
+  border-radius:20px
+}
+.eyebrow {
+  font-size:11px
+}

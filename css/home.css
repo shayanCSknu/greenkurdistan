@@ -1,0 +1,568 @@
+/* Home page — forest hero with live conditions, fact strip, three paths, report band. */
+.home h2 {
+  margin:0;
+  font-family:var(--display);
+  line-height:1.03
+}
+html[dir=rtl] .home h2,html[dir=rtl] .home h1 {
+  line-height:1.35
+}
+
+/* Hero */
+.home-hero {
+  position:relative;
+  overflow:hidden;
+  background:var(--bar);
+  color:var(--bar-ink)
+}
+.home-hero-inner {
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:48px 64px;
+  padding-block:56px 300px
+}
+.home-hero-copy {
+  flex:999 1 520px;
+  min-width:0
+}
+.home-hero .eyebrow {
+  color:var(--gold);
+  font-size:13px;
+  letter-spacing:.14em
+}
+.home-hero h1 {
+  margin:0;
+  font:700 clamp(46px,7.2vw,104px)/.97 var(--display);
+  letter-spacing:-.035em
+}
+.home-hero h1 em {
+  color:var(--gold)
+}
+.home-hero .hero-text {
+  max-width:540px;
+  margin:28px 0 36px;
+  font-size:19px;
+  line-height:1.55;
+  color:#d5ded4
+}
+.home-hero .hero-actions {
+  gap:14px
+}
+.home-cta,.home-ghost {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  min-height:54px;
+  padding:0 28px;
+  border-radius:999px;
+  font-size:17px;
+  font-weight:600;
+  text-decoration:none;
+  transition:transform .15s
+}
+.home-cta {
+  background:var(--gold);
+  color:#12332a
+}
+.home-ghost {
+  border:1.5px solid #6f8c7e;
+  color:inherit
+}
+.home-cta:hover,.home-ghost:hover {
+  transform:translateY(-2px)
+}
+.home-landscape {
+  position:absolute;
+  left:0;
+  bottom:0;
+  z-index:1;
+  display:block;
+  width:100%;
+  height:340px
+}
+
+/* Live conditions card */
+.home-live {
+  flex:1 1 340px;
+  max-width:400px;
+  padding:28px;
+  border-radius:28px;
+  background:#f4f1e6;
+  color:#14261f;
+  box-shadow:0 30px 60px rgba(0,0,0,.28)
+}
+.home-live-top,.home-live-main {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px
+}
+.home-live-top {
+  font-size:14px;
+  color:#55655b
+}
+.home-live-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#1f6b4a
+}
+.home-live-badge i {
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#2b9b47
+}
+.home-live-main {
+  align-items:flex-start;
+  margin-top:18px
+}
+.home-temp {
+  font:700 96px/.9 var(--display);
+  letter-spacing:-.04em;
+  direction:ltr
+}
+.home-temp small {
+  font-size:40px;
+  letter-spacing:0;
+  vertical-align:top
+}
+.home-live-main p {
+  margin:10px 0 0;
+  font-size:17px;
+  font-weight:500
+}
+.home-icon {
+  font-size:64px;
+  line-height:1;
+  color:#e0a21a
+}
+.home-live-stats {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px 12px;
+  margin:24px 0 0;
+  padding-top:20px;
+  border-top:1px solid #d9d6c6
+}
+.home-live-stats dt {
+  font-size:13px;
+  color:#55655b
+}
+.home-live-stats dd {
+  margin:0;
+  font-size:18px;
+  font-weight:600
+}
+.home-live-stats em {
+  font-size:12px;
+  font-style:normal;
+  color:#1f6b4a
+}
+.home-live-link {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:48px;
+  margin-top:22px;
+  padding:0 18px;
+  border-radius:14px;
+  background:#12332a;
+  color:#f4f1e6;
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none
+}
+.home-live-link:hover {
+  background:#1d4a3a
+}
+
+/* Fact strip */
+.home-facts {
+  background:var(--gold);
+  color:#12332a
+}
+.home-facts-inner {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px 40px;
+  padding-block:28px
+}
+.home-facts-inner>div {
+  flex:1 1 220px;
+  font-weight:500
+}
+.home-facts strong {
+  display:block;
+  margin-bottom:6px;
+  font:700 44px/1 var(--display);
+  letter-spacing:-.03em;
+  direction:ltr
+}
+html[dir=rtl] .home-facts strong {
+  text-align:right
+}
+
+/* Three ways in */
+.home-paths {
+  padding-block:96px 40px
+}
+.home-paths-head {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px 48px;
+  margin-bottom:52px
+}
+.home-paths-head h2 {
+  max-width:640px;
+  font-size:clamp(34px,4.4vw,60px)
+}
+.home-paths-head p {
+  max-width:400px;
+  margin:0;
+  font-size:18px;
+  color:var(--muted)
+}
+.home-path-grid,.home-more-grid {
+  display:flex;
+  flex-wrap:wrap;
+  gap:24px
+}
+.home-path {
+  flex:1 1 320px;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding:32px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:var(--card);
+  color:var(--ink);
+  text-decoration:none;
+  transition:transform .15s
+}
+.home-path:hover,.home-more:hover {
+  transform:translateY(-4px)
+}
+.home-path-label {
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--green)
+}
+.home-path-title {
+  font:700 34px/1.05 var(--display);
+  letter-spacing:-.02em
+}
+html[dir=rtl] .home-path-title,html[dir=rtl] .home-more-title {
+  font-family:inherit;
+  line-height:1.3
+}
+.home-path-text {
+  color:var(--muted)
+}
+.home-path-link {
+  margin-top:auto;
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+  font-weight:600;
+  color:var(--green)
+}
+.home-path-dark {
+  border-color:transparent;
+  background:#12332a;
+  color:#f4f1e6
+}
+body.dark .home-path-dark {
+  background:#1d4a3a
+}
+.home-path-dark .home-path-label,.home-path-dark .home-path-link {
+  color:var(--gold)
+}
+.home-path-dark .home-path-text {
+  color:#d5ded4
+}
+.home-forecast {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  padding:18px 12px;
+  border-radius:18px;
+  background:var(--soft);
+  text-align:center;
+  font-size:14px
+}
+.home-forecast span {
+  display:block;
+  color:var(--muted)
+}
+.home-forecast b {
+  display:block;
+  font-size:18px;
+  font-weight:600;
+  color:var(--ink)
+}
+.home-spark {
+  display:block;
+  padding:18px;
+  border-radius:18px;
+  background:#1d4a3a
+}
+body.dark .home-spark {
+  background:#12332a
+}
+.home-spark svg {
+  display:block;
+  width:100%;
+  height:96px
+}
+.home-spark-axis {
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+  font-size:13px;
+  color:#b9c8bc
+}
+.home-checks {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:18px;
+  border-radius:18px;
+  background:var(--soft);
+  font-weight:500
+}
+.home-checks span {
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+.home-checks span:before {
+  content:'';
+  flex:none;
+  width:20px;
+  height:20px;
+  border:2px solid var(--muted);
+  border-radius:50%
+}
+
+/* Report & Resolve band */
+.home-report {
+  padding-block:64px
+}
+.home-report-card {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:48px 72px;
+  padding:clamp(28px,5vw,72px);
+  border-radius:36px;
+  background:#12332a;
+  color:#f4f1e6
+}
+body.dark .home-report-card {
+  background:#1a3d31
+}
+.home-report-card>* {
+  flex:1 1 380px;
+  min-width:0
+}
+.home-report .eyebrow {
+  color:var(--gold);
+  font-size:13px;
+  letter-spacing:.14em
+}
+.home-report h2 {
+  font-size:clamp(34px,4.6vw,64px);
+  line-height:1
+}
+.home-report h2 em {
+  font-style:normal;
+  color:var(--gold)
+}
+.home-report-card p {
+  max-width:440px;
+  margin:24px 0 32px;
+  font-size:18px;
+  color:#d5ded4
+}
+.home-steps {
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin:0;
+  padding:0;
+  list-style:none;
+  counter-reset:step
+}
+.home-steps li {
+  display:flex;
+  align-items:flex-start;
+  gap:20px;
+  padding:24px;
+  border-radius:22px;
+  background:#1d4a3a;
+  counter-increment:step
+}
+body.dark .home-steps li {
+  background:#245443
+}
+.home-steps li:before {
+  content:counter(step);
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:var(--gold);
+  color:#12332a;
+  font:700 20px var(--display)
+}
+.home-steps strong {
+  display:block;
+  font-size:20px;
+  font-weight:600
+}
+.home-steps span {
+  color:#d5ded4
+}
+
+/* More to explore */
+.home-more-section {
+  padding-block:40px 64px
+}
+.home-more-section h2 {
+  margin-bottom:32px;
+  font-size:clamp(30px,3.4vw,44px)
+}
+.home-more {
+  flex:1 1 420px;
+  min-width:0;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:24px;
+  padding:32px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:var(--card);
+  color:var(--ink);
+  text-decoration:none;
+  transition:transform .15s
+}
+.home-more-tint {
+  border-color:transparent;
+  background:var(--soft)
+}
+.home-more-icon {
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:112px;
+  height:112px;
+  border-radius:26px;
+  background:#12332a;
+  color:#f4f1e6
+}
+.home-more-icon.gold {
+  background:var(--gold);
+  color:#12332a
+}
+.home-more-icon svg {
+  width:56px;
+  height:56px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.6;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+.home-more-body {
+  flex:1 1 220px;
+  min-width:0
+}
+.home-more-title {
+  display:block;
+  font:700 28px/1.1 var(--display);
+  letter-spacing:-.02em
+}
+.home-more-text {
+  display:block;
+  margin-top:6px;
+  color:var(--muted)
+}
+.home-more .home-path-link {
+  margin-top:8px
+}
+.home+.site-footer {
+  margin-top:0
+}
+
+@media(max-width:700px) {
+  .home-hero-inner {
+    padding-block:36px 190px
+  }
+  .home-landscape {
+    height:200px
+  }
+  .home-hero .hero-text {
+    font-size:17px
+  }
+  .home-live {
+    max-width:none;
+    padding:22px
+  }
+  .home-temp {
+    font-size:76px
+  }
+  .home-cta,.home-ghost {
+    flex:1 1 100%;
+    justify-content:center
+  }
+  .home-paths {
+    padding-block:64px 24px
+  }
+  .home-path,.home-more {
+    padding:24px
+  }
+  .home-more-icon {
+    width:80px;
+    height:80px;
+    border-radius:20px
+  }
+  .home-more-icon svg {
+    width:40px;
+    height:40px
+  }
+}
+
+/* Right-to-left adjustments */
+html[dir=rtl] .home-hero h1 {
+  font-size:clamp(38px,5.4vw,80px)
+}
+html[dir=rtl] .home-paths-head h2,html[dir=rtl] .home-report h2 {
+  font-size:clamp(30px,3.8vw,52px)
+}
+.home-spark {
+  direction:ltr
+}
+html[dir=rtl] #home-feels,html[dir=rtl] #home-humidity,html[dir=rtl] #home-wind {
+  direction:ltr;
+  text-align:right
+}
+.home-path-text,.home-more-text {
+  font-size:16px
+}
